@@ -54,9 +54,9 @@ export const fetchCurrentUser = createAsyncThunk(
 );
 
 const initialState = {
-  user: null,  // No user is logged in
-  isAuthenticated: false, // No user is logged in
-  loading: false, // No user is logged in so not loading
+  user: null,
+  isAuthenticated: false,
+  loading: false,
   error: null,
 };
 

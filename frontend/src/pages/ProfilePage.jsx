@@ -1,5 +1,5 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useParams, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Navbar from '../components/Navbar/Navbar';
 import ProfileHeader from '../components/Profile/ProfileHeader';
@@ -12,11 +12,14 @@ import useSubmissions from '../hooks/useSubmissions';
 
 const ProfilePage = () => {
   const { username } = useParams();
-  const { user: loggedInUser } = useSelector((state) => state.auth);
+  const { user: loggedInUser, isAuthenticated } = useSelector((state) => state.auth);
   const { profile, loading, error, setProfile } = useProfile(username);
   const { submissions, loading: subLoading, error: subError } = useSubmissions(username);
 
   const isOwnProfile = loggedInUser && loggedInUser.username === username;
+
+  // Debug log
+  console.log({ loggedInUser, username, isOwnProfile, isAuthenticated });
 
   return (
     <>

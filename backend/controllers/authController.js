@@ -47,7 +47,7 @@ exports.register = async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            sameSite: 'lax',
             maxAge: 60 * 60 * 1000 // 1 hour
         });
 
@@ -97,7 +97,7 @@ exports.login = async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            sameSite: 'lax',
             maxAge: 60 * 60 * 1000 // 1 hour
         });
 
@@ -118,7 +118,7 @@ exports.logout = async (req, res) => {
         // Clear the JWT cookie
         res.clearCookie('token', {
             httpOnly: true,
-            sameSite: 'strict',
+            sameSite: 'lax',
             secure: process.env.NODE_ENV === 'production'
         });
         res.json({

@@ -17,8 +17,10 @@ instance.interceptors.response.use(
   },
   (error) => {
     // Handle 401 Unauthorized errors
-    if (error.response?.status === 401) {
-      // You can dispatch a logout action here if needed
+    if (
+      error.response?.status === 401 &&
+      !['/login', '/register', '/'].includes(window.location.pathname)
+    ) {
       window.location.href = '/login';
     }
     return Promise.reject(error);
