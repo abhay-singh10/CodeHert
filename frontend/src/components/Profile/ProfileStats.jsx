@@ -14,12 +14,28 @@ const ProfileStats = ({ profile, loading, error }) => (
       ) : (
         <div className="row text-center">
           <div className="col-6 mb-3">
-            <div className="h3 fw-bold text-success mb-1">{profile.problemsSolved || 0}</div>
+            <div className="h3 fw-bold text-success mb-1">
+              {Array.isArray(profile.problemsSolved) ? profile.problemsSolved.length : 0}
+            </div>
             <div className="text-muted small">Solved</div>
           </div>
           <div className="col-6 mb-3">
-            <div className="h3 fw-bold text-warning mb-1">{profile.problemsAttempted || 0}</div>
+            <div className="h3 fw-bold text-warning mb-1">
+              {Array.isArray(profile.problemsAttempted) ? profile.problemsAttempted.length : 0}
+            </div>
             <div className="text-muted small">Attempted</div>
+          </div>
+          <div className="col-6 mb-3">
+            <div className="h3 fw-bold text-secondary mb-1">{profile.totalSubmissions ?? 0}</div>
+            <div className="text-muted small">Submissions</div>
+          </div>
+          <div className="col-6 mb-3">
+            <div className="h3 fw-bold text-primary mb-1">{profile.points ?? 0}</div>
+            <div className="text-muted small">Points</div>
+          </div>
+          <div className="col-12 mb-3">
+            <div className="h3 fw-bold text-info mb-1">#{profile.rank ?? 0}</div>
+            <div className="text-muted small">Rank</div>
           </div>
         </div>
       )}
