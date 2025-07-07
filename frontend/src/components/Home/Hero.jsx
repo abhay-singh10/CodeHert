@@ -16,12 +16,12 @@ const Hero = () => {
               in our comprehensive online judge platform.
             </p>
             <div className="d-flex gap-3">
-              <Link to="/register" className="btn btn-light btn-lg px-4">
+              <Link to="/problems" className="btn btn-light btn-lg px-4">
                 Start Solving
               </Link>
-              <Link to="/login" className="btn btn-outline-light btn-lg px-4">
+              <a href="#about" className="btn btn-outline-light btn-lg px-4">
                 Learn More
-              </Link>
+              </a>
             </div>
           </div>
           <div className="col-lg-6 text-center">

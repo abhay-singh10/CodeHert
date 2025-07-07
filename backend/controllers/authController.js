@@ -43,10 +43,17 @@ exports.register = async (req, res) => {
         const userObj = newUser.toObject();
         delete userObj.password;
 
+        // Set JWT as HttpOnly cookie
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 60 * 60 * 1000 // 1 hour
+        });
+
         res.status(201).json({
             message: 'User registered successfully',
-            user: userObj,
-            token,
+            user: userObj
         });
 
     } catch (err) {
@@ -86,10 +93,17 @@ exports.login = async (req, res) => {
         const userObj = user.toObject();
         delete userObj.password;
 
+        // Set JWT as HttpOnly cookie
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 60 * 60 * 1000 // 1 hour
+        });
+
         res.status(200).json({
             message: 'Login successful',
-            user: userObj,
-            token,
+            user: userObj
         });
 
     } catch (err) {
@@ -101,7 +115,12 @@ exports.login = async (req, res) => {
 // @route   POST /api/auth/logout
 exports.logout = async (req, res) => {
     try {
-        // The frontend will handle removing the token from localStorage or cookies
+        // Clear the JWT cookie
+        res.clearCookie('token', {
+            httpOnly: true,
+            sameSite: 'strict',
+            secure: process.env.NODE_ENV === 'production'
+        });
         res.json({
             success: true,
             message: 'Logged out successfully'

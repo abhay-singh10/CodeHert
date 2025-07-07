@@ -40,12 +40,24 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
+// Async thunk for fetching current user (for persistent login)
+export const fetchCurrentUser = createAsyncThunk(
+  'auth/fetchCurrentUser',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get('/user/me');
+      return response.data.user;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'Not authenticated');
+    }
+  }
+);
+
 const initialState = {
-  user: null,  //No user is logged in
-  isAuthenticated: false, //No user is logged in
-  loading: false, //No user is logged in so not loading
+  user: null,  // No user is logged in
+  isAuthenticated: false, // No user is logged in
+  loading: false, // No user is logged in so not loading
   error: null,
-  token: localStorage.getItem('token') || null,
 };
 
 const authSlice = createSlice({
@@ -70,9 +82,7 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.user;
-        state.token = action.payload.token;
         state.isAuthenticated = true;
-        localStorage.setItem('token', action.payload.token);
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -86,9 +96,7 @@ const authSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.user;
-        state.token = action.payload.token;
         state.isAuthenticated = true;
-        localStorage.setItem('token', action.payload.token);
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
@@ -97,9 +105,16 @@ const authSlice = createSlice({
       // Logout
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
-        state.token = null;
         state.isAuthenticated = false;
-        localStorage.removeItem('token');
+      })
+      // Fetch current user
+      .addCase(fetchCurrentUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isAuthenticated = true;
+      })
+      .addCase(fetchCurrentUser.rejected, (state) => {
+        state.user = null;
+        state.isAuthenticated = false;
       });
   },
 });

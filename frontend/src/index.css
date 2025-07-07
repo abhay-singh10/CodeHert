@@ -1,6 +1,5 @@
 /* ===== COLOR PALETTE OPTIONS ===== */
 
-/* CURRENT PALETTE - Cool Blue/Purple Theme */
 :root {
   --bs-body-bg: #181a20;
   --bs-body-color: #e0e6ed;
@@ -21,8 +20,6 @@
   --bs-light: #23272f;
   --bs-light-rgb: 35,39,47;
 }
-
-
 
 /* ===== CURRENT ACTIVE PALETTE ===== */
 
@@ -269,4 +266,32 @@ a:focus {
 }
 .text-danger {
   color: var(--bs-danger) !important;
+}
+
+body.light .navbar,
+body.light .navbar-dark,
+body.light .bg-dark {
+  background-color: #fff !important;
+  color: #222 !important;
+}
+
+body.light .card {
+  background-color: #fff !important;
+  color: #222 !important;
+  border-color: #e0e0e0 !important;
+}
+
+body.light .dropdown-menu {
+  background-color: #fff !important;
+  color: #222 !important;
+  border-color: #e0e0e0 !important;
+}
+
+body.light .btn-outline-light {
+  color: #222 !important;
+  border-color: #222 !important;
+}
+body.light .btn-outline-light:hover {
+  background-color: #222 !important;
+  color: #fff !important;
 } 

@@ -11,8 +11,7 @@ exports.getUserProfile = async (req, res) => {
     }
 
     res.json({
-      success: true,
-      data: user
+      user
     });
   } catch (error) {
     console.error('Error getting user profile:', error);

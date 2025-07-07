@@ -48,16 +48,7 @@ const Navbar = () => {
             </li>
           </ul>
           <div className="d-flex">
-            {!auth.isAuthenticated ? (
-              <>
-                <Link to="/login" className="btn btn-outline-light me-2">
-                  Login
-                </Link>
-                <Link to="/register" className="btn btn-primary">
-                  Register
-                </Link>
-              </>
-            ) : (
+            {auth.isAuthenticated && auth.user ? (
               <div className="dropdown">
                 <button 
                   className="btn btn-outline-light dropdown-toggle" 
@@ -65,10 +56,10 @@ const Navbar = () => {
                   data-bs-toggle="dropdown"
                 >
                   <i className="fas fa-user me-1"></i>
-                  {auth.user?.username || 'User'}
+                  {auth.user.username}
                 </button>
                 <ul className="dropdown-menu">
-                  <li><Link className="dropdown-item" to={`/profile/${auth.user?.username}`}>Profile</Link></li>
+                  <li><Link className="dropdown-item" to={`/profile/${auth.user.username}`}>Profile</Link></li>
                   <li><a className="dropdown-item" href="#submissions">Submissions</a></li>
                   <li><hr className="dropdown-divider" /></li>
                   <li>
@@ -81,6 +72,15 @@ const Navbar = () => {
                   </li>
                 </ul>
               </div>
+            ) : (
+              <>
+                <Link to="/login" className="btn btn-outline-light me-2">
+                  Login
+                </Link>
+                <Link to="/register" className="btn btn-primary">
+                  Register
+                </Link>
+              </>
             )}
           </div>
         </div>
