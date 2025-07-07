@@ -33,6 +33,27 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user', // everyone is a user by default
   },
+  // Stats fields
+  problemsSolved: {
+    type: [String], // array of problem codes
+    default: []
+  },
+  problemsAttempted: {
+    type: [String], // array of problem codes
+    default: []
+  },
+  totalSubmissions: {
+    type: Number,
+    default: 0
+  },
+  points: {
+    type: Number,
+    default: 0
+  },
+  rank: {
+    type: Number,
+    default: 0
+  }
 }, {
   timestamps: true // adds createdAt and updatedAt fields
 });

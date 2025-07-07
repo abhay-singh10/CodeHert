@@ -8,9 +8,13 @@ exports.register = async (req, res) => {
         const { first_name, last_name, username, email, password } = req.body;
 
         // Check if user already exists
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: 'User already exists' });
+        const existingEmail = await User.findOne({ email });
+        if (existingEmail) {
+            return res.status(400).json({ error: 'Email already exists' });
+        }
+        const existingUsername = await User.findOne({ username });
+        if (existingUsername) {
+            return res.status(400).json({ error: 'Username already exists' });
         }
 
         // Hash the password
@@ -28,7 +32,22 @@ exports.register = async (req, res) => {
 
         await newUser.save();
 
-        res.status(201).json({ message: 'User registered successfully' });
+        // Generate JWT token for new user
+        const token = jwt.sign(
+            { userId: newUser._id, username: newUser.username, role: newUser.role },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        // Convert user to plain object and remove password
+        const userObj = newUser.toObject();
+        delete userObj.password;
+
+        res.status(201).json({
+            message: 'User registered successfully',
+            user: userObj,
+            token,
+        });
 
     } catch (err) {
         console.log(err);
@@ -47,13 +66,13 @@ exports.login = async (req, res) => {
         });
         console.log('Found user:', user);
         if (!user) {
-            return res.status(400).json({ message: 'Invalid username/email or user does not exist' });
+            return res.status(400).json({ error: 'Invalid username/email or user does not exist' });
         }
 
         // Compare password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ message: 'Incorrect password' });
+            return res.status(400).json({ error: 'Incorrect password' });
         }
 
         // Generate JWT
@@ -77,5 +96,18 @@ exports.login = async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 
+};
+
+// @route   POST /api/auth/logout
+exports.logout = async (req, res) => {
+    try {
+        // The frontend will handle removing the token from localStorage or cookies
+        res.json({
+            success: true,
+            message: 'Logged out successfully'
+        });
+    } catch (err) {
+        res.status(500).json({ error: 'Server error' });
+    }
 };
 

@@ -1,0 +1,272 @@
+/* ===== COLOR PALETTE OPTIONS ===== */
+
+/* CURRENT PALETTE - Cool Blue/Purple Theme */
+:root {
+  --bs-body-bg: #181a20;
+  --bs-body-color: #e0e6ed;
+  --bs-primary: #4f8cff;
+  --bs-primary-rgb: 79,140,255;
+  --bs-secondary: #6c63ff;
+  --bs-secondary-rgb: 108,99,255;
+  --bs-success: #00bfae;
+  --bs-success-rgb: 0,191,174;
+  --bs-info: #00cfff;
+  --bs-info-rgb: 0,207,255;
+  --bs-warning: #ffb86c;
+  --bs-warning-rgb: 255,184,108;
+  --bs-danger: #ff5c8d;
+  --bs-danger-rgb: 255,92,141;
+  --bs-dark: #23272f;
+  --bs-dark-rgb: 35,39,47;
+  --bs-light: #23272f;
+  --bs-light-rgb: 35,39,47;
+}
+
+
+
+/* ===== CURRENT ACTIVE PALETTE ===== */
+
+body {
+  background: var(--bs-body-bg) !important;
+  color: var(--bs-body-color) !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+/* Dark theme overrides */
+.navbar-dark {
+  background-color: var(--bs-dark) !important;
+}
+
+.bg-primary {
+  background-color: var(--bs-primary) !important;
+}
+
+.bg-dark {
+  background-color: var(--bs-dark) !important;
+}
+
+.bg-light {
+  background-color: #2a2d35 !important;
+}
+
+.card {
+  background-color: var(--bs-dark) !important;
+  border-color: #3a3f4a !important;
+}
+
+.card-body {
+  color: var(--bs-body-color) !important;
+}
+
+.text-muted {
+  color: #a0a6b1 !important;
+}
+
+.btn-primary {
+  background-color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+}
+
+.btn-primary:hover {
+  background-color: #3d7aff !important;
+  border-color: #3d7aff !important;
+}
+
+.btn-outline-light {
+  color: var(--bs-body-color) !important;
+  border-color: var(--bs-body-color) !important;
+}
+
+.btn-outline-light:hover {
+  background-color: var(--bs-body-color) !important;
+  color: var(--bs-dark) !important;
+}
+
+.dropdown-menu {
+  background-color: var(--bs-dark) !important;
+  border-color: #3a3f4a !important;
+}
+
+.dropdown-item {
+  color: var(--bs-body-color) !important;
+}
+
+.dropdown-item:hover {
+  background-color: #3a3f4a !important;
+  color: var(--bs-body-color) !important;
+}
+
+/* Modal styling */
+.modal-content {
+  background-color: var(--bs-dark) !important;
+  border-color: #3a3f4a !important;
+}
+
+.modal-header {
+  border-bottom-color: #3a3f4a !important;
+}
+
+.modal-title {
+  color: var(--bs-body-color) !important;
+}
+
+.btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.form-label {
+  color: var(--bs-body-color) !important;
+}
+
+.form-control {
+  background-color: #2a2d35 !important;
+  border-color: #3a3f4a !important;
+  color: var(--bs-body-color) !important;
+}
+
+.form-control:focus {
+  background-color: #2a2d35 !important;
+  border-color: var(--bs-primary) !important;
+  box-shadow: 0 0 0 0.2rem rgba(79, 140, 255, 0.25) !important;
+  color: var(--bs-body-color) !important;
+}
+
+.form-control::placeholder {
+  color: #6c757d !important;
+}
+
+.alert {
+  border-color: #3a3f4a !important;
+}
+
+.alert-danger {
+  background-color: rgba(255, 92, 141, 0.1) !important;
+  color: #ff5c8d !important;
+  border-color: rgba(255, 92, 141, 0.3) !important;
+}
+
+.text-danger {
+  color: #ff5c8d !important;
+}
+
+/* Form check styling */
+.form-check-input {
+  background-color: #2a2d35 !important;
+  border-color: #3a3f4a !important;
+}
+
+.form-check-input:checked {
+  background-color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+}
+
+.form-check-label {
+  color: var(--bs-body-color) !important;
+}
+
+/* Link styling */
+.text-decoration-none:hover {
+  text-decoration: underline !important;
+}
+
+/* Min height utility */
+.min-vh-100 {
+  min-height: 100vh;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Smooth scrolling for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Focus styles for accessibility */
+button:focus,
+a:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+/* Card hover effects */
+.card {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Button hover effects */
+.btn {
+  transition: all 0.2s ease-in-out;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+/* Navbar brand hover effect */
+.navbar-brand:hover {
+  opacity: 0.8;
+}
+
+/* Social media icons hover effect */
+.fab:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.bg-primary {
+  background-color: var(--bs-primary) !important;
+}
+
+.bg-dark, .navbar-dark, .footer, .card {
+  background-color: var(--bs-dark) !important;
+}
+
+.text-primary {
+  color: var(--bs-primary) !important;
+}
+.text-secondary {
+  color: var(--bs-secondary) !important;
+}
+.text-success {
+  color: var(--bs-success) !important;
+}
+.text-info {
+  color: var(--bs-info) !important;
+}
+.text-warning {
+  color: var(--bs-warning) !important;
+}
+.text-danger {
+  color: var(--bs-danger) !important;
+} 

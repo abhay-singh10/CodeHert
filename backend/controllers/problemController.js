@@ -72,7 +72,10 @@ exports.getProblemByCode = async (req, res) => {
 exports.updateProblem = async (req, res) => {
     try {
         const { code } = req.params;
-        const updateData = req.body;
+        const updateData = { ...req.body };
+        // Prevent updating name and code
+        delete updateData.name;
+        delete updateData.code;
         const updatedProblem = await Problem.findOneAndUpdate(
             { code },           
             updateData,
