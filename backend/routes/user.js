@@ -5,11 +5,11 @@ const userController = require('../controllers/userController');
 
 // @route   GET /api/user/me
 // @desc    Get logged-in user's profile (private)
-router.get('/me', authMiddleware , userController.getUserProfile);
+router.get('/me', authMiddleware, userController.getMe);
 
-// @route   PUT /api/user/me
+// @route   PUT /api/user/:username
 // @desc    Update logged-in user's profile (private)
-router.put('/me',authMiddleware,  userController.updateUserProfile);
+router.put('/:username',authMiddleware,  userController.updateUserProfile);
 
 // @route   GET /api/user/:username
 // @desc    Get public user profile by username (public)

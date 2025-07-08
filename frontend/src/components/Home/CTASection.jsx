@@ -1,19 +1,9 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const CTASection = () => {
-  const navigate = useNavigate();
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-
-  const handleClick = (e) => {
-    e.preventDefault();
-    if (isAuthenticated) {
-      navigate('/problems');
-    } else {
-      navigate('/register');
-    }
-  };
 
   return (
     <section className="py-5">
@@ -24,9 +14,15 @@ const CTASection = () => {
             <p className="lead text-muted mb-4">
               Join our community of problem solvers and take your coding skills to the next level.
             </p>
-            <button className="btn btn-primary btn-lg px-5" onClick={handleClick}>
-              Get Started Now
-            </button>
+            {isAuthenticated ? (
+              <Link to="/problems" className="btn btn-primary btn-lg px-5">
+                Get Started Now
+              </Link>
+            ) : (
+              <Link to="/register" className="btn btn-primary btn-lg px-5">
+                Get Started Now
+              </Link>
+            )}
           </div>
         </div>
       </div>

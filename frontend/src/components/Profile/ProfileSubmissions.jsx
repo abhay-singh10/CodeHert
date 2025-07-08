@@ -18,7 +18,7 @@ const ProfileSubmissions = ({ submissions, subLoading, subError }) => (
       ) : subError ? (
         <div className="alert alert-danger" role="alert">
           <i className="fas fa-exclamation-triangle me-2"></i>
-          {subError}
+          {typeof subError === 'string' ? subError : subError?.message || JSON.stringify(subError)}
         </div>
       ) : submissions.length === 0 ? (
         <div className="text-center text-muted">No submissions found.</div>

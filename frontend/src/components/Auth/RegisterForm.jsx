@@ -141,7 +141,7 @@ const RegisterForm = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Create a password"
+                placeholder="At least 6 characters"
                 required
               />
               <button

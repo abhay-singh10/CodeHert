@@ -1,37 +1,8 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import{ useNavigate, Link }  from 'react-router-dom';
-import { loginUser, clearError } from '../features/auth/authSlice';
+import React from 'react';
+import { Link }  from 'react-router-dom';
 import LoginForm from '../components/Auth/LoginForm';
 
 const LoginPage = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { loading, error } = useSelector((state) => state.auth);
-  const [formData, setFormData] = useState({
-    loginInput: '',
-    password: ''
-  });
-  const [showPassword, setShowPassword] = useState(false);
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const result = await dispatch(loginUser(formData)).unwrap();
-      // Redirect to profile with username
-      navigate(`/profile/${result.user.username}`);
-    } catch (error) {
-      // Error is handled by Redux
-    }
-  };
-
   return (
     <div className="min-vh-100 d-flex align-items-center justify-content-center py-5">
       <div className="container">

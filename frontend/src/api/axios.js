@@ -16,9 +16,12 @@ instance.interceptors.response.use(
     return response;
   },
   (error) => {
-    // Handle 401 Unauthorized errors
+    // Only redirect to /login for 401 errors from protected endpoints (not /user/me)
+    const protectedEndpoints = ['/auth/logout'];
+    const requestUrl = error.config?.url || '';
     if (
       error.response?.status === 401 &&
+      protectedEndpoints.some(endpoint => requestUrl.includes(endpoint)) &&
       !['/login', '/register', '/'].includes(window.location.pathname)
     ) {
       window.location.href = '/login';
