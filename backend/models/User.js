@@ -42,16 +42,12 @@ const userSchema = new mongoose.Schema({
     type: [String], // array of problem codes
     default: []
   },
-  totalSubmissions: {
-    type: Number,
-    default: 0
-  },
-  points: {
+  rating: {
     type: Number,
     default: 0
   },
   rank: {
-    type: Number,
+    type: Number, 
     default: 0
   }
 }, {

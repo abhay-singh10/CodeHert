@@ -39,6 +39,17 @@ const ProfileStats = ({ profile, loading, error }) => {
     );
   }
 
+  // Count solved problems by difficulty
+  let easy = 0, medium = 0, hard = 0;
+  if (Array.isArray(profile.problemsSolved)) {
+    profile.problemsSolved.forEach(p => {
+      if (!p.difficulty) return;
+      if (p.difficulty.toLowerCase() === 'easy') easy++;
+      else if (p.difficulty.toLowerCase() === 'medium') medium++;
+      else if (p.difficulty.toLowerCase() === 'hard') hard++;
+    });
+  }
+
   return (
     <div className="card border-0 shadow-sm mb-4">
       <div className="card-header bg-transparent border-0">
@@ -49,29 +60,20 @@ const ProfileStats = ({ profile, loading, error }) => {
       </div>
       <div className="card-body">
         <div className="row text-center">
-          <div className="col-6 mb-3">
-            <div className="h3 fw-bold text-success mb-1">
-              {Array.isArray(profile.problemsSolved) ? profile.problemsSolved.length : 0}
-            </div>
-            <div className="text-muted small">Solved</div>
+          <div className="col-4 mb-3">
+            <div className="h4 fw-bold text-success mb-1">{easy}</div>
+            <div className="text-muted small">Easy</div>
+          </div>
+          <div className="col-4 mb-3">
+            <div className="h4 fw-bold text-warning mb-1">{medium}</div>
+            <div className="text-muted small">Medium</div>
+          </div>
+          <div className="col-4 mb-3">
+            <div className="h4 fw-bold text-danger mb-1">{hard}</div>
+            <div className="text-muted small">Hard</div>
           </div>
           <div className="col-6 mb-3">
-            <div className="h3 fw-bold text-warning mb-1">
-              {Array.isArray(profile.problemsAttempted) ? profile.problemsAttempted.length : 0}
-            </div>
-            <div className="text-muted small">Attempted</div>
-          </div>
-          <div className="col-6 mb-3">
-            <div className="h3 fw-bold text-secondary mb-1">{profile.totalSubmissions ?? 0}</div>
-            <div className="text-muted small">Submissions</div>
-          </div>
-          <div className="col-6 mb-3">
-            <div className="h3 fw-bold text-primary mb-1">{profile.points ?? 0}</div>
-            <div className="text-muted small">Points</div>
-          </div>
-          <div className="col-12 mb-3">
-            <div className="h3 fw-bold text-info mb-1">#{profile.rank ?? 0}</div>
-            <div className="text-muted small">Rank</div>
+            {/* Rating removed, now shown in personal info */}
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const Submission = require('../models/Submission');
+const Problem = require('../models/Problem');
 
 // Get logged-in user's profile (for persistent login)
 exports.getMe = async (req, res) => {
@@ -53,9 +54,17 @@ exports.getPublicUserProfile = async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
+    // Fetch problem details for problemsSolved
+    const problems = await Problem.find({ code: { $in: user.problemsSolved } }, 'code name difficulty');
+    // Map to keep order same as user.problemsSolved
+    const problemMap = {};
+    problems.forEach(p => { problemMap[p.code] = p; });
+    const problemsSolvedDetailed = user.problemsSolved.map(code => problemMap[code] || { code });
+    const userObj = user.toObject();
+    userObj.problemsSolved = problemsSolvedDetailed;
     res.json({
       success: true,
-      data: user
+      data: userObj
     });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });

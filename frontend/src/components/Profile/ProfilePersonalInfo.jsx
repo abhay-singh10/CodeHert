@@ -170,6 +170,10 @@ const ProfilePersonalInfo = ({
               <label className="form-label fw-semibold">Username</label>
               <p className="text-muted mb-0">@{profile.username}</p>
             </div>
+            <div className="col-md-6 mb-3">
+              <label className="form-label fw-semibold">Rating</label>
+              <p className="text-muted mb-0">{profile.rating ?? 0}</p>
+            </div>
           </div>
         )}
       </div>
