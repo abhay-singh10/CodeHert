@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/auth');
 const problemRoutes = require('./routes/problem');
 const userRoutes = require('./routes/user');
+const compileRoutes = require('./routes/compile');
 
 // Connect to MongoDB
 connectDB();
@@ -20,6 +21,7 @@ app.use(cors({
   origin: 'http://localhost:5174', // Frontend URL
   credentials: true
 }));
+
 
 // Middleware
 app.use(express.json());
@@ -35,6 +37,10 @@ app.use('/api/problems', problemRoutes);
 
 //user management routes
 app.use('/api/user', userRoutes);
+
+//compiler
+app.use('/api/compile', compileRoutes);
+
 
 // Start server
 const PORT = process.env.PORT || 5000;
