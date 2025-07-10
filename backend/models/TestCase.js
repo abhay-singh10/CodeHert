@@ -5,7 +5,9 @@ const testCaseSchema = new mongoose.Schema({
     input: { type: String, required: true },
     expected_output: { type: String, required: true },
     index: { type: Number, required: true },
-    points: {type: Number, default : 1}
+    points: { type: Number, default: 1 },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    editedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 }, {
     timestamps: true
 });

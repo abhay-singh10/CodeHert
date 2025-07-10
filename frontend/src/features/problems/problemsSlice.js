@@ -15,30 +15,14 @@ export const fetchProblems = createAsyncThunk(
 );
 
 // Async thunk for fetching a single problem
-export const fetchProblemById = createAsyncThunk(
-  'problems/fetchProblemById',
-  async (problemId, { rejectWithValue }) => {
+export const fetchProblemByCode = createAsyncThunk(
+  'problems/fetchProblemByCode',
+  async (problemCode, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/problems/${problemId}`);
+      const response = await axios.get(`/problems/code/${problemCode}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to fetch problem');
-    }
-  }
-);
-
-// Async thunk for submitting a solution
-export const submitSolution = createAsyncThunk(
-  'problems/submitSolution',
-  async ({ problemId, code, language }, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(`/problems/${problemId}/submit`, {
-        code,
-        language,
-      });
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || 'Submission failed');
     }
   }
 );
@@ -63,9 +47,6 @@ const problemsSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
-    clearSubmissionResult: (state) => {
-      state.submissionResult = null;
-    },
     setFilters: (state, action) => {
       state.filters = { ...state.filters, ...action.payload };
     },
@@ -89,37 +70,23 @@ const problemsSlice = createSlice({
         state.error = action.payload;
       })
       // Fetch single problem
-      .addCase(fetchProblemById.pending, (state) => {
+      .addCase(fetchProblemByCode.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchProblemById.fulfilled, (state, action) => {
+      .addCase(fetchProblemByCode.fulfilled, (state, action) => {
         state.loading = false;
         state.currentProblem = action.payload;
       })
-      .addCase(fetchProblemById.rejected, (state, action) => {
+      .addCase(fetchProblemByCode.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      // Submit solution
-      .addCase(submitSolution.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(submitSolution.fulfilled, (state, action) => {
-        state.loading = false;
-        state.submissionResult = action.payload;
-      })
-      .addCase(submitSolution.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
   },
 });
 
 export const { 
   clearError, 
-  clearSubmissionResult, 
   setFilters, 
   clearCurrentProblem 
 } = problemsSlice.actions;

@@ -8,26 +8,6 @@ if (!fs.existsSync(outputPath)) {
     fs.mkdirSync(outputPath, { recursive: true });
 }
 
-const errorCodeMap = {
-    // Windows
-    3221225477: "Segmentation fault (access violation)",
-    3221225725: "Stack overflow",
-    3221225781: "Division by zero",
-    3221225620: "Division by zero",
-};
-
-function getFriendlyErrorMessage(code, stderr) {
-    if (errorCodeMap[code]) {
-        return errorCodeMap[code];
-    }
-    if (stderr) {
-        if (stderr.includes("Segmentation fault")) return "Segmentation fault";
-        if (stderr.includes("Floating point exception")) return "Floating point exception";
-        if (stderr.includes("Aborted")) return "Aborted (assertion failed)";
-    }
-    return `Process exited with code ${code}`;
-}
-
 const executeCpp = (filepath, input = '') => {
     const jobId = path.basename(filepath).split(".")[0];
     const outPath = path.join(outputPath, `${jobId}.exe`);
@@ -66,10 +46,11 @@ const executeCpp = (filepath, input = '') => {
 
             run.on('close', (code) => {
                 if (code !== 0) {
+                    const details = (stderr && stderr.trim()) ? stderr : (stdout && stdout.trim()) ? stdout : `Process exited with code ${code}`;
                     return reject({
                         type: 'runtime',
                         message: 'Runtime error',
-                        details: getFriendlyErrorMessage(code, stderr)
+                        details
                     });
                 }
                 resolve(stdout);

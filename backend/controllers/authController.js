@@ -53,7 +53,8 @@ exports.register = async (req, res) => {
 
         res.status(201).json({
             message: 'User registered successfully',
-            user: userObj
+            user: userObj,
+            token // add token to response
         });
 
     } catch (err) {
@@ -103,7 +104,8 @@ exports.login = async (req, res) => {
 
         res.status(200).json({
             message: 'Login successful',
-            user: userObj
+            user: userObj,
+            token // add token to response
         });
 
     } catch (err) {

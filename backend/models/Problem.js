@@ -15,7 +15,9 @@ const problemSchema = new mongoose.Schema({
     examples: { type: [exampleSchema], required: true },
     constraints: { type: String, required: true },
     tags: [{ type: String }],
-    hints: [{ type: String }]
+    hints: [{ type: String }],
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    editedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 }, {
     timestamps: true
 });

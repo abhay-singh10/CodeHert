@@ -8,6 +8,8 @@ const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/auth');
 const problemRoutes = require('./routes/problem');
 const userRoutes = require('./routes/user');
+const adminProblemRoutes = require('./routes/admin/adminProblem');
+const adminTestCaseRoutes = require('./routes/admin/adminTestCase');
 const compileRoutes = require('./routes/compile');
 
 // Connect to MongoDB
@@ -18,7 +20,7 @@ const app = express();
 
 // CORS middleware
 app.use(cors({
-  origin: 'http://localhost:5174', // Frontend URL
+  origin: 'http://localhost:5173', // Frontend URL
   credentials: true
 }));
 
@@ -27,19 +29,28 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+const authMiddleware = require('./middleware/authMiddleware');
+const isAdmin = require('./middleware/isAdmin');
 
 // Routes
 //authentication routes
 app.use('/api/auth', authRoutes);
 
-//problem management routes
+//problem
 app.use('/api/problems', problemRoutes);
+
+//admin functions
+//problems
+app.use('/api/admin/problems', authMiddleware, isAdmin, adminProblemRoutes);
+
+//Test cases
+app.use('/api/admin/testcases', authMiddleware, isAdmin, adminTestCaseRoutes);
 
 //user management routes
 app.use('/api/user', userRoutes);
 
 //compiler
-app.use('/api/compile', compileRoutes);
+app.use('/api/compile', authMiddleware, compileRoutes);
 
 
 // Start server
