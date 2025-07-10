@@ -42,6 +42,11 @@ const Navbar = () => {
             <li className="nav-item">
               <a className="nav-link" href="#contest">Contest</a>
             </li>
+            {auth.isAuthenticated && auth.user && auth.user.role === 'admin' && (
+              <li className="nav-item">
+                <Link className={`nav-link ${isActive('/admin')}`} to="/admin">Admin Dashboard</Link>
+              </li>
+            )}
             <li className="nav-item">
               <a className="nav-link" href="#about">About</a>
             </li>

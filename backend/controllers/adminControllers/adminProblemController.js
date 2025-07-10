@@ -8,6 +8,11 @@ function slugify(name) {
 // @desc    Create a new problem
 exports.createProblem = async (req, res) => {
     try {
+        console.log('=== CREATE PROBLEM DEBUG ===');
+        console.log('Request Body:', req.body);
+        console.log('User:', req.user);
+        console.log('===========================');
+        
         const { name, statement, difficulty, tags, hints, examples, constraints } = req.body;
         let baseSlug = slugify(name);
         let slug = baseSlug;
@@ -39,12 +44,16 @@ exports.createProblem = async (req, res) => {
             hints,
             examples,
             constraints,
-            createdBy: req.user._id,
-            editedBy: req.user._id
+            createdBy: req.user.userId,
+            editedBy: req.user.userId
         });
         await newProblem.save();
         res.status(201).json(newProblem);
     } catch (err) {
+        console.log('=== CREATE PROBLEM ERROR ===');
+        console.log('Error:', err.message);
+        console.log('Full Error:', err);
+        console.log('===========================');
         res.status(500).json({ message: 'Server Error', error: err.message });
     }
 };
@@ -57,7 +66,7 @@ exports.updateProblem = async (req, res) => {
         // Prevent updating name and code
         delete updateData.name;
         delete updateData.code;
-        updateData.editedBy = req.user._id;
+        updateData.editedBy = req.user.userId;
         const updatedProblem = await Problem.findOneAndUpdate(
             { code },           
             updateData,
