@@ -100,7 +100,23 @@ exports.submit = async (req, res) => {
             language,
             result,
         });
-await submission.save();
+        await submission.save();
+
+        // Update user's problemsAttempted and problemsSolved
+        if (user && problemCode) {
+          const userDoc = await require('../models/User').findById(user);
+          if (userDoc) {
+            // Add to problemsAttempted if not already present
+            if (!userDoc.problemsAttempted.includes(problemCode)) {
+              userDoc.problemsAttempted.push(problemCode);
+            }
+            // Add to problemsSolved if accepted and not already present
+            if (result === 'Accepted' && !userDoc.problemsSolved.includes(problemCode)) {
+              userDoc.problemsSolved.push(problemCode);
+            }
+            await userDoc.save();
+          }
+        }
 
         res.json({ result, testcaseResults });
     } catch (error) {

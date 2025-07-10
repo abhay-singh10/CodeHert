@@ -37,10 +37,10 @@ const Navbar = () => {
               <Link className={`nav-link ${isActive('/')}`} to="/">Home</Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#problems">Problems</a>
+              <Link className={`nav-link ${isActive('/problems')}`} to="/problems">Problems</Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#leaderboard">Leaderboard</a>
+              <a className="nav-link" href="#contest">Contest</a>
             </li>
             <li className="nav-item">
               <a className="nav-link" href="#about">About</a>
