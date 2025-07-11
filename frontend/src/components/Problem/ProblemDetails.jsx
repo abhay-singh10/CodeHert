@@ -53,12 +53,14 @@ const ProblemDetails = () => {
         <strong>Statement:</strong>
         <div>{currentProblem.statement}</div>
       </div>
-      {currentProblem.constraints && (
-        <div className="mb-3">
-          <strong>Constraints:</strong>
-          <pre className="bg-light p-2 rounded">{currentProblem.constraints}</pre>
-        </div>
-      )}
+      <div className="mb-3">
+        <strong>Input:</strong>
+        <pre className="bg-light p-2 rounded">{currentProblem.inputSection || ''}</pre>
+      </div>
+      <div className="mb-3">
+        <strong>Output:</strong>
+        <pre className="bg-light p-2 rounded">{currentProblem.outputSection || ''}</pre>
+      </div>
       {currentProblem.examples && currentProblem.examples.length > 0 && (
         <div className="mb-3">
           <h5>Examples</h5>

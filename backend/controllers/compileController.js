@@ -76,17 +76,18 @@ exports.submit = async (req, res) => {
                     break;
                 }
             } catch (error) {
-                result = `Runtime error on TC${testcase.index}`;
-                if (error.response) {
-                  console.error('Error response data:', error.response.data);
-                  console.error('Error response status:', error.response.status);
-                  console.error('Error response headers:', error.response.headers);
+                let isCompilationError = false;
+                let errorType = 'runtime_error';
+                if (error.response && error.response.data && error.response.data.type === 'compilation') {
+                  result = `Compilation Error on TC${testcase.index}`;
+                  errorType = 'compilation_error';
+                  isCompilationError = true;
                 } else {
-                  console.error('Error object:', error);
+                  result = `Runtime error on TC${testcase.index}`;
                 }
                 testcaseResults.push({
                     index: testcase.index,
-                    status: 'runtime_error'
+                    status: errorType
                 });
                 break;
             }
@@ -120,7 +121,6 @@ exports.submit = async (req, res) => {
 
         res.json({ result, testcaseResults });
     } catch (error) {
-        console.error('Error in submit controller:', error);
         res.status(500).json({ error: error.message });
     } 
 };

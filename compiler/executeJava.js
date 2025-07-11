@@ -8,16 +8,18 @@ if (!fs.existsSync(outputPath)) {
     fs.mkdirSync(outputPath, { recursive: true });
 }
 
-const executeCpp = (filepath, input = '') => {
+const executeJava = (filepath, input = '') => {
     const jobId = path.basename(filepath).split(".")[0];
-    const outPath = path.join(outputPath, `${jobId}.exe`);
+    const className = path.basename(filepath, ".java");
+    const outDir = outputPath;
 
     return new Promise((resolve, reject) => {
-        // Use environment variable for g++ path, fallback to 'g++'
-        const gppPath = process.env.GPP_PATH || 'g++';
+        // Use environment variables for Java paths, fallback to 'javac' and 'java'
+        const javacPath = process.env.JAVAC_PATH || 'javac';
+        const javaPath = process.env.JAVA_PATH || 'java';
         
         // Compile first
-        exec(`${gppPath} ${filepath} -o ${outPath}`, (compileError, _, compileStderr) => {
+        exec(`${javacPath} ${filepath} -d ${outDir}`, (compileError, _, compileStderr) => {
             if (compileError) {
                 return reject({
                     type: 'compilation',
@@ -26,8 +28,8 @@ const executeCpp = (filepath, input = '') => {
                 });
             }
 
-            // Run the executable with spawn
-            const run = spawn(outPath, [], { cwd: outputPath });
+            // Run the class file with spawn
+            const run = spawn(javaPath, ['-cp', outDir, className], { cwd: outDir });
             let stdout = '';
             let stderr = '';
 
@@ -63,5 +65,5 @@ const executeCpp = (filepath, input = '') => {
 };
 
 module.exports = {
-    executeCpp,
-};
+    executeJava,
+}; 

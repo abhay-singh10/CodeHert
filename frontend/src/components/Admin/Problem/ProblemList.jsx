@@ -37,9 +37,12 @@ const ProblemList = ({ problems, onEdit, onDelete }) => {
                 <button className="btn btn-sm btn-warning me-2" onClick={() => onEdit(problem)}>
                   Edit
                 </button>
-                <button className="btn btn-sm btn-danger" onClick={() => onDelete(problem)}>
+                <button className="btn btn-sm btn-danger me-2" onClick={() => onDelete(problem)}>
                   Delete
                 </button>
+                <Link to={`/admin/testcases/${problem.code}`} className="btn btn-sm btn-info">
+                  Manage Test Cases
+                </Link>
               </td>
             </tr>
           ))}

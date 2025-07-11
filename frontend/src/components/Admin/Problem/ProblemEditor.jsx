@@ -9,7 +9,8 @@ const ProblemEditor = ({ initialData, onSubmit, onCancel }) => {
       ? initialData.hints.join(', ')
       : initialData?.hints || ''
   );
-  const [constraints, setConstraints] = useState(initialData?.constraints || '');
+  const [inputSection, setInputSection] = useState(initialData?.inputSection || '');
+  const [outputSection, setOutputSection] = useState(initialData?.outputSection || '');
   const [tags, setTags] = useState(
     Array.isArray(initialData?.tags)
       ? initialData.tags.join(', ')
@@ -42,7 +43,8 @@ const ProblemEditor = ({ initialData, onSubmit, onCancel }) => {
       difficulty,
       statement,
       hints: hints.split(',').map(t => t.trim()).filter(Boolean),
-      constraints,
+      inputSection,
+      outputSection,
       tags: tags.split(',').map(t => t.trim()).filter(Boolean),
       examples: examples.filter(ex => ex.input && ex.output),
     });
@@ -103,22 +105,32 @@ const ProblemEditor = ({ initialData, onSubmit, onCancel }) => {
         />
       </div>
       <div className="mb-3">
+        <label className="form-label">Input Section</label>
+        <textarea
+          className="form-control"
+          rows={2}
+          value={inputSection}
+          onChange={e => setInputSection(e.target.value)}
+          required
+        />
+      </div>
+      <div className="mb-3">
+        <label className="form-label">Output Section</label>
+        <textarea
+          className="form-control"
+          rows={2}
+          value={outputSection}
+          onChange={e => setOutputSection(e.target.value)}
+          required
+        />
+      </div>
+      <div className="mb-3">
         <label className="form-label">Hints (comma separated)</label>
         <input
           type="text"
           className="form-control"
           value={hints}
           onChange={e => setHints(e.target.value)}
-        />
-      </div>
-      <div className="mb-3">
-        <label className="form-label">Constraints</label>
-        <textarea
-          className="form-control"
-          rows={2}
-          value={constraints}
-          onChange={e => setConstraints(e.target.value)}
-          required
         />
       </div>
       <div className="mb-3">

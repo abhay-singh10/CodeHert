@@ -69,11 +69,11 @@ const CodeEditor = ({ onRun, onSubmit }) => {
             fontSize: 16,
             minimap: { enabled: false },
             scrollBeyondLastLine: false,
-            wordWrap: "on",
+            wordWrap: "off",
             fontFamily: 'Fira Mono, monospace',
             lineNumbers: 'on',
             roundedSelection: true,
-            scrollbar: { vertical: 'auto' },
+            scrollbar: { vertical: 'auto', horizontal: 'auto' },
           }}
         />
       </div>

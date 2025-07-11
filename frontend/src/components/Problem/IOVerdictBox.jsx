@@ -65,6 +65,7 @@ const IOVerdictBox = ({ input, onInputChange, runResult, submissionResult, force
 
   let verdict = '';
   if (submissionResult) {
+    console.log('DEBUG submissionResult:', submissionResult); // Debug log
     verdict = submissionResult.result || submissionResult.error || '';
   }
 
@@ -118,6 +119,10 @@ const IOVerdictBox = ({ input, onInputChange, runResult, submissionResult, force
                 >
                   {verdict}
                 </span>
+                {/* Show compilation error details if present */}
+                {verdict.includes('Compilation Error') && submissionResult?.error && (
+                  <pre className="bg-dark text-danger p-2 rounded mt-2" style={{ whiteSpace: 'pre-wrap', fontSize: '0.95em' }}>{submissionResult.error.details || submissionResult.error.message || submissionResult.error}</pre>
+                )}
                 {/* Show testcase blocks if not Accepted and testcaseResults exist */}
                 {verdict !== 'Accepted' && submissionResult?.testcaseResults && (
                   <div className="mt-3 d-flex gap-3 flex-wrap">

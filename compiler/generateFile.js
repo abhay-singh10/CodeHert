@@ -11,7 +11,12 @@ if (!fs.existsSync(dirCodes)) {
 
 const generateFile = (format, content) => {
     const jobID = uuid();
-    const filename = `${jobID}.${format}`;
+    // Map language to correct file extension
+    let extension = format;
+    if (format === 'python') {
+        extension = 'py';
+    }
+    const filename = `${jobID}.${extension}`;
     const filePath = path.join(dirCodes, filename);
     fs.writeFileSync(filePath, content);
     return filePath;

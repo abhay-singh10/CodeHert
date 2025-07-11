@@ -13,7 +13,7 @@ exports.createProblem = async (req, res) => {
         console.log('User:', req.user);
         console.log('===========================');
         
-        const { name, statement, difficulty, tags, hints, examples, constraints } = req.body;
+        const { name, statement, difficulty, tags, hints, examples, inputSection, outputSection } = req.body;
         let baseSlug = slugify(name);
         let slug = baseSlug;
 
@@ -25,7 +25,7 @@ exports.createProblem = async (req, res) => {
             // Find the highest suffix number
             let max = 1;
             existingProblems.forEach(p => {
-                const match = p.code.match(/-(\d+)$/);
+                const match = p.code.match(/-(\\d+)$/);
                 if (match) {
                     max = Math.max(max, parseInt(match[1], 10) + 1);
                 } else {
@@ -43,7 +43,8 @@ exports.createProblem = async (req, res) => {
             tags,
             hints,
             examples,
-            constraints,
+            inputSection,
+            outputSection,
             createdBy: req.user.userId,
             editedBy: req.user.userId
         });
@@ -66,6 +67,7 @@ exports.updateProblem = async (req, res) => {
         // Prevent updating name and code
         delete updateData.name;
         delete updateData.code;
+        // Removed constraints check (no longer needed)
         updateData.editedBy = req.user.userId;
         const updatedProblem = await Problem.findOneAndUpdate(
             { code },           
