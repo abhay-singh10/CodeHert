@@ -31,10 +31,10 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="card border-0 shadow-lg">
-      <div className="card-body p-5">
+    <div className="auth-card">
+      <div className="auth-card-content">
         {error && (
-          <div className="alert alert-danger alert-dismissible fade show" role="alert">
+          <div className="alert-message error">
             <i className="fas fa-exclamation-triangle me-2"></i>
             {typeof error === 'string'
               ? error
@@ -46,15 +46,15 @@ const LoginForm = () => {
             ></button>
           </div>
         )}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="loginInput" className="form-label fw-semibold">
-              <i className="fas fa-user me-2 text-muted"></i>
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="form-group">
+            <label htmlFor="loginInput" className="form-label">
+              <i className="fas fa-user me-2"></i>
               Username or Email
             </label>
             <input
               type="text"
-              className="form-control form-control-lg"
+              className="form-control"
               id="loginInput"
               name="loginInput"
               value={formData.loginInput}
@@ -63,15 +63,15 @@ const LoginForm = () => {
               required
             />
           </div>
-          <div className="mb-4">
-            <label htmlFor="password" className="form-label fw-semibold">
-              <i className="fas fa-lock me-2 text-muted"></i>
+          <div className="form-group">
+            <label htmlFor="password" className="form-label">
+              <i className="fas fa-lock me-2"></i>
               Password
             </label>
             <div className="input-group">
               <input
                 type={showPassword ? "text" : "password"}
-                className="form-control form-control-lg"
+                className="form-control"
                 id="password"
                 name="password"
                 value={formData.password}
@@ -80,7 +80,7 @@ const LoginForm = () => {
                 required
               />
               <button
-                className="btn btn-outline-secondary"
+                className="btn-password-toggle"
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
               >
@@ -90,7 +90,7 @@ const LoginForm = () => {
           </div>
           <button
             type="submit"
-            className="btn btn-primary btn-lg w-100 mb-4"
+            className="btn-auth-primary"
             disabled={loading}
           >
             {loading ? (
@@ -106,14 +106,14 @@ const LoginForm = () => {
             )}
           </button>
         </form>
-        <div className="text-center">
-          <p className="text-muted mb-3">
+        <div className="auth-links">
+          <p className="auth-link-text">
             Don't have an account?{' '}
-            <Link to="/register" className="text-primary text-decoration-none fw-semibold">
+            <Link to="/register" className="auth-link">
               Create one here
             </Link>
           </p>
-          <Link to="/forgot-password" className="text-muted text-decoration-none">
+          <Link to="/forgot-password" className="auth-link-secondary">
             <i className="fas fa-key me-1"></i>
             Forgot your password?
           </Link>

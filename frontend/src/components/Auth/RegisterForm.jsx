@@ -47,10 +47,10 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className="card border-0 shadow-lg">
-      <div className="card-body p-5">
+    <div className="auth-card">
+      <div className="auth-card-content">
         {error && (
-          <div className="alert alert-danger alert-dismissible fade show" role="alert">
+          <div className="alert-message error">
             <i className="fas fa-exclamation-triangle me-2"></i>
             {typeof error === 'string'
               ? error
@@ -62,16 +62,16 @@ const RegisterForm = () => {
             ></button>
           </div>
         )}
-        <form onSubmit={handleSubmit}>
-          <div className="row">
-            <div className="col-md-6 mb-3">
-              <label htmlFor="first_name" className="form-label fw-semibold">
-                <i className="fas fa-user me-2 text-muted"></i>
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="first_name" className="form-label">
+                <i className="fas fa-user me-2"></i>
                 First Name
               </label>
               <input
                 type="text"
-                className="form-control form-control-lg"
+                className="form-control"
                 id="first_name"
                 name="first_name"
                 value={formData.first_name}
@@ -80,14 +80,14 @@ const RegisterForm = () => {
                 required
               />
             </div>
-            <div className="col-md-6 mb-3">
-              <label htmlFor="last_name" className="form-label fw-semibold">
-                <i className="fas fa-user me-2 text-muted"></i>
+            <div className="form-group">
+              <label htmlFor="last_name" className="form-label">
+                <i className="fas fa-user me-2"></i>
                 Last Name
               </label>
               <input
                 type="text"
-                className="form-control form-control-lg"
+                className="form-control"
                 id="last_name"
                 name="last_name"
                 value={formData.last_name}
@@ -96,14 +96,14 @@ const RegisterForm = () => {
               />
             </div>
           </div>
-          <div className="mb-3">
-            <label htmlFor="username" className="form-label fw-semibold">
-              <i className="fas fa-at me-2 text-muted"></i>
+          <div className="form-group">
+            <label htmlFor="username" className="form-label">
+              <i className="fas fa-at me-2"></i>
               Username
             </label>
             <input
               type="text"
-              className="form-control form-control-lg"
+              className="form-control"
               id="username"
               name="username"
               value={formData.username}
@@ -112,14 +112,14 @@ const RegisterForm = () => {
               required
             />
           </div>
-          <div className="mb-3">
-            <label htmlFor="email" className="form-label fw-semibold">
-              <i className="fas fa-envelope me-2 text-muted"></i>
+          <div className="form-group">
+            <label htmlFor="email" className="form-label">
+              <i className="fas fa-envelope me-2"></i>
               Email
             </label>
             <input
               type="email"
-              className="form-control form-control-lg"
+              className="form-control"
               id="email"
               name="email"
               value={formData.email}
@@ -128,15 +128,15 @@ const RegisterForm = () => {
               required
             />
           </div>
-          <div className="mb-4">
-            <label htmlFor="password" className="form-label fw-semibold">
-              <i className="fas fa-lock me-2 text-muted"></i>
+          <div className="form-group">
+            <label htmlFor="password" className="form-label">
+              <i className="fas fa-lock me-2"></i>
               Password
             </label>
             <div className="input-group">
               <input
                 type={showPassword ? "text" : "password"}
-                className="form-control form-control-lg"
+                className="form-control"
                 id="password"
                 name="password"
                 value={formData.password}
@@ -145,7 +145,7 @@ const RegisterForm = () => {
                 required
               />
               <button
-                className="btn btn-outline-secondary"
+                className="btn-password-toggle"
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
               >
@@ -153,16 +153,16 @@ const RegisterForm = () => {
               </button>
             </div>
           </div>
-          <div className="mb-4">
+          <div className="form-group">
             <div className="form-check">
               <input className="form-check-input" type="checkbox" id="agreeTerms" required />
               <label className="form-check-label" htmlFor="agreeTerms">
                 I agree to the{' '}
-                <Link to="/terms" className="text-primary text-decoration-none">
+                <Link to="/terms" className="auth-link">
                   Terms of Service
                 </Link>{' '}
                 and{' '}
-                <Link to="/privacy" className="text-primary text-decoration-none">
+                <Link to="/privacy" className="auth-link">
                   Privacy Policy
                 </Link>
               </label>
@@ -170,7 +170,7 @@ const RegisterForm = () => {
           </div>
           <button
             type="submit"
-            className="btn btn-primary btn-lg w-100 mb-4"
+            className="btn-auth-primary"
             disabled={loading}
           >
             {loading ? (
@@ -186,10 +186,10 @@ const RegisterForm = () => {
             )}
           </button>
         </form>
-        <div className="text-center">
-          <p className="text-muted mb-3">
+        <div className="auth-links">
+          <p className="auth-link-text">
             Already have an account?{' '}
-            <Link to="/login" className="text-primary text-decoration-none fw-semibold">
+            <Link to="/login" className="auth-link">
               Sign in here
             </Link>
           </p>

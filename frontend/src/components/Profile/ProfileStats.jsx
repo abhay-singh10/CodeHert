@@ -3,10 +3,11 @@ import React from 'react';
 const ProfileStats = ({ profile, loading, error }) => {
   if (loading) {
     return (
-      <div className="card border-0 shadow-sm mb-4">
-        <div className="card-body text-center py-4">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
+      <div className="profile-card">
+        <div className="profile-card-content">
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>Loading statistics...</p>
           </div>
         </div>
       </div>
@@ -15,11 +16,13 @@ const ProfileStats = ({ profile, loading, error }) => {
 
   if (error) {
     return (
-      <div className="card border-0 shadow-sm mb-4">
-        <div className="card-body">
-          <div className="alert alert-danger" role="alert">
-            <i className="fas fa-exclamation-triangle me-2"></i>
-            {typeof error === 'string' ? error : error?.message || JSON.stringify(error)}
+      <div className="profile-card">
+        <div className="profile-card-content">
+          <div className="error-container">
+            <div className="error-icon">
+              <i className="fas fa-exclamation-triangle"></i>
+            </div>
+            <p>{typeof error === 'string' ? error : error?.message || JSON.stringify(error)}</p>
           </div>
         </div>
       </div>
@@ -28,11 +31,13 @@ const ProfileStats = ({ profile, loading, error }) => {
 
   if (!profile) {
     return (
-      <div className="card border-0 shadow-sm mb-4">
-        <div className="card-body">
-          <div className="alert alert-warning" role="alert">
-            <i className="fas fa-exclamation-circle me-2"></i>
-            Profile not found.
+      <div className="profile-card">
+        <div className="profile-card-content">
+          <div className="error-container">
+            <div className="error-icon">
+              <i className="fas fa-exclamation-circle"></i>
+            </div>
+            <p>Profile not found.</p>
           </div>
         </div>
       </div>
@@ -50,30 +55,50 @@ const ProfileStats = ({ profile, loading, error }) => {
     });
   }
 
+  const totalSolved = easy + medium + hard;
+
   return (
-    <div className="card border-0 shadow-sm mb-4">
-      <div className="card-header bg-transparent border-0">
-        <h5 className="mb-0">
-          <i className="fas fa-chart-bar me-2 text-primary"></i>
-          Statistics
-        </h5>
+    <div className="profile-card">
+      <div className="profile-card-header">
+        <div className="profile-card-title">
+          <i className="fas fa-chart-bar"></i>
+          <span>Statistics</span>
+        </div>
       </div>
-      <div className="card-body">
-        <div className="row text-center">
-          <div className="col-4 mb-3">
-            <div className="h4 fw-bold text-success mb-1">{easy}</div>
-            <div className="text-muted small">Easy</div>
+      <div className="profile-card-content">
+        <div className="stats-overview">
+          <div className="total-solved">
+            <div className="total-number">{totalSolved}</div>
+            <div className="total-label">Problems Solved</div>
           </div>
-          <div className="col-4 mb-3">
-            <div className="h4 fw-bold text-warning mb-1">{medium}</div>
-            <div className="text-muted small">Medium</div>
+        </div>
+        <div className="stats-grid">
+          <div className="stat-item easy">
+            <div className="stat-icon">
+              <i className="fas fa-check-circle"></i>
+            </div>
+            <div className="stat-content">
+              <div className="stat-number">{easy}</div>
+              <div className="stat-label">Easy</div>
+            </div>
           </div>
-          <div className="col-4 mb-3">
-            <div className="h4 fw-bold text-danger mb-1">{hard}</div>
-            <div className="text-muted small">Hard</div>
+          <div className="stat-item medium">
+            <div className="stat-icon">
+              <i className="fas fa-star"></i>
+            </div>
+            <div className="stat-content">
+              <div className="stat-number">{medium}</div>
+              <div className="stat-label">Medium</div>
+            </div>
           </div>
-          <div className="col-6 mb-3">
-            {/* Rating removed, now shown in personal info */}
+          <div className="stat-item hard">
+            <div className="stat-icon">
+              <i className="fas fa-fire"></i>
+            </div>
+            <div className="stat-content">
+              <div className="stat-number">{hard}</div>
+              <div className="stat-label">Hard</div>
+            </div>
           </div>
         </div>
       </div>

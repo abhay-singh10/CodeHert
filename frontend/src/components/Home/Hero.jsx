@@ -3,30 +3,36 @@ import { Link } from 'react-router-dom';
 
 const Hero = () => {
   return (
-    <section id="home" className="bg-primary text-white py-5">
+    <section className="home-hero">
+      <div className="hero-background">
+        <div className="hero-particles"></div>
+      </div>
       <div className="container">
-        <div className="row align-items-center">
-          <div className="col-lg-6">
-            <h1 className="display-4 fw-bold mb-4">
+        <div className="hero-content">
+          <div className="hero-text">
+            <h1 className="hero-title">
               Master Your Coding Skills
             </h1>
-            <p className="lead mb-4">
+            <p className="hero-subtitle">
               Join thousands of developers solving algorithmic challenges, 
               improving their problem-solving skills, and competing with peers 
               in our comprehensive online judge platform.
             </p>
-            <div className="d-flex gap-3">
-              <Link to="/problems" className="btn btn-light btn-lg px-4">
+            <div className="hero-buttons">
+              <Link to="/problems" className="btn-hero-primary">
+                <i className="fas fa-rocket me-2"></i>
                 Start Solving
               </Link>
-              <a href="#about" className="btn btn-outline-light btn-lg px-4">
+              <a href="#features" className="btn-hero-secondary">
+                <i className="fas fa-info-circle me-2"></i>
                 Learn More
               </a>
             </div>
           </div>
-          <div className="col-lg-6 text-center">
-            <div className="bg-white bg-opacity-10 rounded p-4">
-              <i className="fas fa-laptop-code display-1"></i>
+          <div className="hero-visual">
+            <div className="hero-icon-container">
+              <i className="fas fa-laptop-code hero-icon"></i>
+              <div className="hero-glow"></div>
             </div>
           </div>
         </div>

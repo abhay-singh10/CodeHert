@@ -15,11 +15,11 @@ const deepRedStyle = {
   borderColor: '#b3001b',
 };
 
-const IOVerdictBox = ({ input, onInputChange, runResult, submissionResult, forceTab, onTabChange }) => {
+const IOVerdictBox = ({ input, onInputChange, runResult, submissionResult, forceTab, onTabChange, aiReview }) => {
   const [activeTab, setActiveTab] = useState('input');
 
   useEffect(() => {
-    if (forceTab && ['input', 'output', 'verdict'].includes(forceTab)) {
+    if (forceTab && ['input', 'output', 'verdict', 'review'].includes(forceTab)) {
       setActiveTab(forceTab);
       if (onTabChange) onTabChange();
     }
@@ -70,31 +70,37 @@ const IOVerdictBox = ({ input, onInputChange, runResult, submissionResult, force
   }
 
   return (
-    <div className="card mt-3 shadow-sm">
-      <div className="card-header d-flex gap-2">
+    <div className="io-verdict-card">
+      <div className="io-verdict-header">
         <button
-          className={`btn btn-sm ${activeTab === 'input' ? 'btn-primary' : 'btn-outline-primary'}`}
+          className={`io-verdict-tab ${activeTab === 'input' ? 'active' : ''}`}
           onClick={() => setActiveTab('input')}
         >
           Input
         </button>
         <button
-          className={`btn btn-sm ${activeTab === 'output' ? 'btn-primary' : 'btn-outline-primary'}`}
+          className={`io-verdict-tab ${activeTab === 'output' ? 'active' : ''}`}
           onClick={() => setActiveTab('output')}
         >
           Output
         </button>
         <button
-          className={`btn btn-sm ${activeTab === 'verdict' ? 'btn-primary' : 'btn-outline-primary'}`}
+          className={`io-verdict-tab ${activeTab === 'verdict' ? 'active' : ''}`}
           onClick={() => setActiveTab('verdict')}
         >
           Verdict
         </button>
+        <button
+          className={`io-verdict-tab ${activeTab === 'review' ? 'active' : ''}`}
+          onClick={() => setActiveTab('review')}
+        >
+          Review
+        </button>
       </div>
-      <div className="card-body" style={{ minHeight: 120 }}>
+      <div className="io-verdict-body">
         {activeTab === 'input' && (
           <textarea
-            className="form-control"
+            className="io-verdict-input"
             rows={4}
             value={input}
             onChange={e => onInputChange(e.target.value)}
@@ -103,9 +109,9 @@ const IOVerdictBox = ({ input, onInputChange, runResult, submissionResult, force
         )}
         {activeTab === 'output' && (
           <>
-            <pre className="bg-dark text-white p-2 rounded mb-0">{output || 'No output yet.'}</pre>
+            <pre className="io-verdict-output">{output || 'No output yet.'}</pre>
             {mappedDetails && (
-              <pre className="bg-dark text-danger p-2 rounded mt-2" style={{ whiteSpace: 'pre-wrap', fontSize: '0.95em' }}>{mappedDetails}</pre>
+              <pre className="io-verdict-error">{mappedDetails}</pre>
             )}
           </>
         )}
@@ -114,18 +120,17 @@ const IOVerdictBox = ({ input, onInputChange, runResult, submissionResult, force
             {verdict ? (
               <>
                 <span
-                  className={`badge text-white fs-5 px-4 py-2 mb-3${verdict === 'Accepted' ? ' bg-success border-success' : ''}`}
-                  style={{ borderRadius: '1em', fontWeight: 700, letterSpacing: '0.5px', display: 'inline-block', ...(verdict !== 'Accepted' ? deepRedStyle : {}) }}
+                  className={`io-verdict-badge ${verdict !== 'Accepted' ? 'error' : ''}`}
                 >
                   {verdict}
                 </span>
                 {/* Show compilation error details if present */}
                 {verdict.includes('Compilation Error') && submissionResult?.error && (
-                  <pre className="bg-dark text-danger p-2 rounded mt-2" style={{ whiteSpace: 'pre-wrap', fontSize: '0.95em' }}>{submissionResult.error.details || submissionResult.error.message || submissionResult.error}</pre>
+                  <pre className="io-verdict-error">{submissionResult.error.details || submissionResult.error.message || submissionResult.error}</pre>
                 )}
                 {/* Show testcase blocks if not Accepted and testcaseResults exist */}
                 {verdict !== 'Accepted' && submissionResult?.testcaseResults && (
-                  <div className="mt-3 d-flex gap-3 flex-wrap">
+                  <div className="io-verdict-testcases">
                     {submissionResult.testcaseResults.map((tc, idx) => {
                       const isPassed = tc.status === 'pass';
                       // Stop rendering after the first failed testcase
@@ -133,8 +138,7 @@ const IOVerdictBox = ({ input, onInputChange, runResult, submissionResult, force
                         return (
                           <div
                             key={tc.index}
-                            className="px-3 py-2 rounded text-white mb-2 d-inline-block border"
-                            style={{ fontWeight: 600, fontSize: '1rem', letterSpacing: '0.2px', ...deepRedStyle }}
+                            className="io-testcase failed"
                           >
                             Test case {tc.index}
                           </div>
@@ -143,8 +147,7 @@ const IOVerdictBox = ({ input, onInputChange, runResult, submissionResult, force
                       return (
                         <div
                           key={tc.index}
-                          className="px-3 py-2 rounded text-white mb-2 d-inline-block bg-success border border-success"
-                          style={{ fontWeight: 600, fontSize: '1rem', letterSpacing: '0.2px' }}
+                          className="io-testcase passed"
                         >
                           Test case {tc.index}
                         </div>
@@ -154,8 +157,21 @@ const IOVerdictBox = ({ input, onInputChange, runResult, submissionResult, force
                 )}
               </>
             ) : (
-              <span className="text-muted">No verdict yet.</span>
+              <span className="io-verdict-empty">No verdict yet.</span>
             )}
+          </div>
+        )}
+        {activeTab === 'review' && aiReview && (
+          <div className="ai-review-form ai-review-card" style={{ marginTop: '1.5em' }}>
+            <div className="ai-review-header" style={{ display: 'flex', alignItems: 'center', gap: '0.5em', marginBottom: '0.5em', color: '#3b82f6', fontWeight: 600, fontSize: '1.1em' }}>
+              <span role="img" aria-label="robot">🤖</span> AI Code Review
+            </div>
+            <pre className="ai-review-output">{aiReview}</pre>
+          </div>
+        )}
+        {activeTab === 'review' && !aiReview && (
+          <div className="ai-review-form ai-review-card" style={{ marginTop: '1.5em', textAlign: 'center', color: '#888' }}>
+            No AI review yet.
           </div>
         )}
       </div>

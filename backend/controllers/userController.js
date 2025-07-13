@@ -80,12 +80,19 @@ exports.getPublicUserSubmissions = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
     const submissions = await Submission.find({ user: user._id })
-      .populate('problem', 'name difficulty')
-      .sort({ createdAt: -1 })
-      .limit(10);
+      .populate('problem', 'code')
+      .sort({ createdAt: -1 });
+    const data = submissions.map(sub => ({
+      result: sub.result,
+      timestamp: sub.createdAt,
+      username: user.username,
+      problem_code: sub.problem?.code || '',
+      language: sub.language,
+      code: sub.code
+    }));
     res.json({
       success: true,
-      data: submissions
+      data
     });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });

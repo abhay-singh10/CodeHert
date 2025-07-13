@@ -6,24 +6,30 @@ const CTASection = () => {
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
 
   return (
-    <section className="py-5">
+    <section className="home-cta">
+      <div className="cta-background">
+        <div className="cta-particles"></div>
+      </div>
       <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-lg-8 text-center">
-            <h2 className="display-6 fw-bold mb-4">Ready to Start Your Journey?</h2>
-            <p className="lead text-muted mb-4">
-              Join our community of problem solvers and take your coding skills to the next level.
-            </p>
+        <div className="cta-content">
+          <h2 className="cta-title">Ready to Start Your Journey?</h2>
+          <p className="cta-subtitle">
+            Join our community of problem solvers and take your coding skills to the next level.
+          </p>
+          <div className="cta-button-container">
             {isAuthenticated ? (
-              <Link to="/problems" className="btn btn-primary btn-lg px-5">
+              <Link to="/problems" className="btn-cta-primary">
+                <i className="fas fa-rocket me-2"></i>
                 Get Started Now
               </Link>
             ) : (
-              <Link to="/register" className="btn btn-primary btn-lg px-5">
+              <Link to="/register" className="btn-cta-primary">
+                <i className="fas fa-user-plus me-2"></i>
                 Get Started Now
               </Link>
             )}
           </div>
+          <div className="cta-glow"></div>
         </div>
       </div>
     </section>

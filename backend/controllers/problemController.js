@@ -1,10 +1,4 @@
 const Problem = require('../models/Problem');
-
-// Converts a string to a URL-friendly slug
-function slugify(name) {
-    return name.trim().toLowerCase().replace(/\s+/g, '-');
-}
-
 // @desc    Get all problems
 exports.getAllProblems = async (req, res) => {
     try {

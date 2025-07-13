@@ -70,6 +70,12 @@ const ProblemEditor = ({ initialData, onSubmit, onCancel }) => {
             className="form-control"
             value={initialData?.code || ''}
             disabled
+            style={{
+              color: '#000',
+              backgroundColor: '#f8f9fa',
+              border: '1px solid #dee2e6',
+              opacity: 0.8
+            }}
           />
         </div>
       )}

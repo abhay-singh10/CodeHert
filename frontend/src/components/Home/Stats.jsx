@@ -2,22 +2,26 @@ import React from 'react';
 
 const Stats = () => {
   const stats = [
-    { number: '10K+', label: 'Active Users', color: 'primary' },
-    { number: '500+', label: 'Problems', color: 'success' },
-    { number: '50K+', label: 'Submissions', color: 'warning' },
-    { number: '100+', label: 'Contests', color: 'info' }
+    { number: '10K+', label: 'Active Users', color: 'cyan' },
+    { number: '500+', label: 'Problems', color: 'magenta' },
+    { number: '50K+', label: 'Submissions', color: 'cyan' },
+    { number: '100+', label: 'Contests', color: 'magenta' }
   ];
 
   return (
-    <section className="bg-light py-5">
+    <section className="home-stats">
+      <div className="stats-background">
+        <div className="stats-particles"></div>
+      </div>
       <div className="container">
-        <div className="row text-center">
+        <div className="stats-grid">
           {stats.map((stat, index) => (
-            <div key={index} className="col-md-3 mb-3">
-              <div className={`h2 fw-bold text-${stat.color} mb-1`}>
+            <div key={index} className="stat-card">
+              <div className={`stat-number ${stat.color}`}>
                 {stat.number}
               </div>
-              <div className="text-muted">{stat.label}</div>
+              <div className="stat-label">{stat.label}</div>
+              <div className={`stat-glow ${stat.color}`}></div>
             </div>
           ))}
         </div>

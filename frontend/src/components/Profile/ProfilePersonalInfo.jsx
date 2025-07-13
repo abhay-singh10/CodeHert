@@ -51,10 +51,11 @@ const ProfilePersonalInfo = ({
 
   if (loading) {
     return (
-      <div className="card border-0 shadow-sm mb-4">
-        <div className="card-body text-center py-4">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
+      <div className="profile-card">
+        <div className="profile-card-content">
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>Loading profile...</p>
           </div>
         </div>
       </div>
@@ -63,11 +64,13 @@ const ProfilePersonalInfo = ({
 
   if (error) {
     return (
-      <div className="card border-0 shadow-sm mb-4">
-        <div className="card-body">
-          <div className="alert alert-danger" role="alert">
-            <i className="fas fa-exclamation-triangle me-2"></i>
-            {typeof error === 'string' ? error : error?.message || JSON.stringify(error)}
+      <div className="profile-card">
+        <div className="profile-card-content">
+          <div className="error-container">
+            <div className="error-icon">
+              <i className="fas fa-exclamation-triangle"></i>
+            </div>
+            <p>{typeof error === 'string' ? error : error?.message || JSON.stringify(error)}</p>
           </div>
         </div>
       </div>
@@ -76,11 +79,13 @@ const ProfilePersonalInfo = ({
 
   if (!profile) {
     return (
-      <div className="card border-0 shadow-sm mb-4">
-        <div className="card-body">
-          <div className="alert alert-warning" role="alert">
-            <i className="fas fa-exclamation-circle me-2"></i>
-            Profile not found.
+      <div className="profile-card">
+        <div className="profile-card-content">
+          <div className="error-container">
+            <div className="error-icon">
+              <i className="fas fa-exclamation-circle"></i>
+            </div>
+            <p>Profile not found.</p>
           </div>
         </div>
       </div>
@@ -88,91 +93,91 @@ const ProfilePersonalInfo = ({
   }
 
   return (
-    <div className="card border-0 shadow-sm mb-4">
-      <div className="card-header bg-transparent border-0 d-flex justify-content-between align-items-center">
-        <h5 className="mb-0">
-          <i className="fas fa-user me-2 text-primary"></i>
-          Personal Information
-        </h5>
+    <div className="profile-card">
+      <div className="profile-card-header">
+        <div className="profile-card-title">
+          <i className="fas fa-user"></i>
+          <span>Personal Information</span>
+        </div>
         {isOwnProfile && !editMode && (
-          <button className="btn btn-sm btn-outline-primary" onClick={() => setEditMode(true)}>
+          <button className="btn-edit-profile" onClick={() => setEditMode(true)}>
+            <i className="fas fa-edit"></i>
             Edit
           </button>
         )}
       </div>
-      <div className="card-body">
+      <div className="profile-card-content">
         {editMode ? (
-          <form onSubmit={handleSubmit}>
-            <div className="row">
-              <div className="col-md-6 mb-3">
-                <label className="form-label fw-semibold">First Name</label>
+          <form onSubmit={handleSubmit} className="profile-form">
+            <div className="form-row">
+              <div className="form-group">
+                <label>First Name</label>
                 <input
                   type="text"
-                  className="form-control"
                   name="first_name"
                   value={formData.first_name}
                   onChange={handleChange}
                   required
                 />
               </div>
-              <div className="col-md-6 mb-3">
-                <label className="form-label fw-semibold">Last Name</label>
+              <div className="form-group">
+                <label>Last Name</label>
                 <input
                   type="text"
-                  className="form-control"
                   name="last_name"
                   value={formData.last_name}
                   onChange={handleChange}
                 />
               </div>
-              <div className="col-md-12 mb-3">
-                <label className="form-label fw-semibold">Email</label>
-                <input
-                  type="email"
-                  className="form-control"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+            </div>
+            <div className="form-group">
+              <label>Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
             </div>
             {updateError && (
-              <div className="alert alert-danger" role="alert">
-                <i className="fas fa-exclamation-triangle me-2"></i>
+              <div className="alert-message error">
+                <i className="fas fa-exclamation-triangle"></i>
                 {updateError}
               </div>
             )}
             {successMsg && (
-              <div className="alert alert-success" role="alert">
-                <i className="fas fa-check-circle me-2"></i>
+              <div className="alert-message success">
+                <i className="fas fa-check-circle"></i>
                 {successMsg}
               </div>
             )}
-            <button type="submit" className="btn btn-primary me-2" disabled={updateLoading}>
-              {updateLoading ? 'Saving...' : 'Save'}
-            </button>
-            <button type="button" className="btn btn-secondary" onClick={() => setEditMode(false)}>
-              Cancel
-            </button>
+            <div className="form-actions">
+              <button type="submit" className="btn-save" disabled={updateLoading}>
+                {updateLoading ? 'Saving...' : 'Save'}
+              </button>
+              <button type="button" className="btn-cancel" onClick={() => setEditMode(false)}>
+                Cancel
+              </button>
+            </div>
           </form>
         ) : (
-          <div className="row">
-            <div className="col-md-6 mb-3">
-              <label className="form-label fw-semibold">First Name</label>
-              <p className="text-muted mb-0">{profile.first_name}</p>
+          <div className="profile-info-grid">
+            <div className="info-item">
+              <label>First Name</label>
+              <span>{profile.first_name}</span>
             </div>
-            <div className="col-md-6 mb-3">
-              <label className="form-label fw-semibold">Last Name</label>
-              <p className="text-muted mb-0">{profile.last_name}</p>
+            <div className="info-item">
+              <label>Last Name</label>
+              <span>{profile.last_name}</span>
             </div>
-            <div className="col-md-6 mb-3">
-              <label className="form-label fw-semibold">Username</label>
-              <p className="text-muted mb-0">@{profile.username}</p>
+            <div className="info-item">
+              <label>Username</label>
+              <span>@{profile.username}</span>
             </div>
-            <div className="col-md-6 mb-3">
-              <label className="form-label fw-semibold">Rating</label>
-              <p className="text-muted mb-0">{profile.rating ?? 0}</p>
+            <div className="info-item">
+              <label>Rating</label>
+              <span className="rating-value">{profile.rating ?? 0}</span>
             </div>
           </div>
         )}

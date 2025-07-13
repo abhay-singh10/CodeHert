@@ -9,43 +9,50 @@ import AdminProblemPage from './pages/admin/ProblemPage';
 import ProblemSetPage from './pages/ProblemSetPage';
 import AuthInitializer from './components/AuthInitializer';
 import TestCasePage from './pages/admin/TestCasePage';
-import DashboardPage from './pages/admin/DashboardPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import { useSelector } from 'react-redux';
+import SubmissionsPage from './pages/SubmissionsPage';
 
 function App() {
+  const loading = useSelector(state => state.auth.loading);
+
   return (
     <Router>
       <AuthInitializer />
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/profile/:username" element={<ProfilePage />} />
-          <Route path="/problems" element={<ProblemSetPage />} />
-          <Route path="/problems/:problemCode" element={<ProblemPage />} />
-          <Route path="/admin" element={
-            <ProtectedRoute requireAdmin={true}>
-              <DashboardPage />
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/problems" element={
-            <ProtectedRoute requireAdmin={true}>
-              <AdminProblemPage />
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/testcases" element={
-            <ProtectedRoute requireAdmin={true}>
-              <TestCasePage />
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/testcases/:problemCode" element={
-            <ProtectedRoute requireAdmin={true}>
-              <TestCasePage />
-            </ProtectedRoute>
-          } />
-        </Routes>
-      </div>
+      {loading ? (
+        <div className="d-flex justify-content-center align-items-center min-vh-100">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      ) : (
+        <div className="App">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/profile/:username" element={<ProfilePage />} />
+            <Route path="/problems" element={<ProblemSetPage />} />
+            <Route path="/problems/:problemCode" element={<ProblemPage />} />
+            <Route path="/submissions/user/:username" element={<SubmissionsPage />} />
+            <Route path="/admin/problems" element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminProblemPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/testcases" element={
+              <ProtectedRoute requireAdmin={true}>
+                <TestCasePage />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/testcases/:problemCode" element={
+              <ProtectedRoute requireAdmin={true}>
+                <TestCasePage />
+              </ProtectedRoute>
+            } />
+          </Routes>
+        </div>
+      )}
     </Router>
   );
 }

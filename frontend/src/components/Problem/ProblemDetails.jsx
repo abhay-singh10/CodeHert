@@ -2,19 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { fetchProblemByCode } from '../../features/problems/problemsSlice';
+import ReactMarkdown from 'react-markdown';
 
-const getDifficultyStyle = (difficulty) => {
-  switch ((difficulty || '').toLowerCase()) {
-    case 'easy':
-      return { color: '#00bfae', background: 'rgba(0,191,174,0.1)', fontWeight: 600, padding: '2px 10px', borderRadius: 8, display: 'inline-block' };
-    case 'medium':
-      return { color: '#ffb86c', background: 'rgba(255,184,108,0.1)', fontWeight: 600, padding: '2px 10px', borderRadius: 8, display: 'inline-block' };
-    case 'hard':
-      return { color: '#ff5c8d', background: 'rgba(255,92,141,0.1)', fontWeight: 600, padding: '2px 10px', borderRadius: 8, display: 'inline-block' };
-    default:
-      return { fontWeight: 600, padding: '2px 10px', borderRadius: 8, display: 'inline-block' };
-  }
-};
 
 const ProblemDetails = () => {
   const { problemCode } = useParams();
@@ -36,86 +25,88 @@ const ProblemDetails = () => {
   }, [currentProblem?._id, currentProblem?.hints?.length]);
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div className="text-danger">{error}</div>;
+  if (error) return <div className="error-message">{error}</div>;
   if (!currentProblem) return <div>No problem found.</div>;
 
   return (
     <div>
-      <h2 className="fw-bold mb-3">{currentProblem.name}</h2>
+      <h2 className="problem-title">{currentProblem.name}</h2>
       {currentProblem.difficulty && (
-        <div className="mb-3">
-          <span style={getDifficultyStyle(currentProblem.difficulty)}>
+        <div className="problem-difficulty">
+          <span className={`problem-difficulty-badge ${currentProblem.difficulty.toLowerCase()}`}>
             {currentProblem.difficulty}
           </span>
         </div>
       )}
-      <div className="mb-3">
-        <strong>Statement:</strong>
-        <div>{currentProblem.statement}</div>
+      <div className="problem-section">
+        <span className="problem-section-title">Statement:</span>
+        <div className="problem-section-content">
+          <ReactMarkdown>{currentProblem.statement || ''}</ReactMarkdown>
+        </div>
       </div>
-      <div className="mb-3">
-        <strong>Input:</strong>
-        <pre className="bg-light p-2 rounded">{currentProblem.inputSection || ''}</pre>
+      <div className="problem-section">
+        <span className="problem-section-title">Input:</span>
+        <div className="problem-section-content">
+          <ReactMarkdown>{currentProblem.inputSection || ''}</ReactMarkdown>
+        </div>
       </div>
-      <div className="mb-3">
-        <strong>Output:</strong>
-        <pre className="bg-light p-2 rounded">{currentProblem.outputSection || ''}</pre>
+      <div className="problem-section">
+        <span className="problem-section-title">Output:</span>
+        <div className="problem-section-content">
+          <ReactMarkdown>{currentProblem.outputSection || ''}</ReactMarkdown>
+        </div>
       </div>
       {currentProblem.examples && currentProblem.examples.length > 0 && (
-        <div className="mb-3">
-          <h5>Examples</h5>
+        <div className="problem-section">
+          <h5 className="problem-section-title">Examples</h5>
           {currentProblem.examples.map((ex, idx) => (
-            <div key={ex._id || idx} className="mb-2">
-              <div className="bg-dark text-white p-3 rounded">
-                <div><strong>Input:</strong> <pre className="d-inline text-white" style={{fontFamily: 'monospace', whiteSpace: 'pre-wrap'}}>{ex.input}</pre></div>
-                <div><strong>Output:</strong> <pre className="d-inline text-white" style={{fontFamily: 'monospace', whiteSpace: 'pre-wrap'}}>{ex.output}</pre></div>
-                {ex.explanation && <div><strong>Explanation:</strong> <span className="text-white">{ex.explanation}</span></div>}
-              </div>
+            <div key={ex._id || idx} className="problem-example">
+              <div><strong>Input:</strong> <div className="problem-example-content">{ex.input}</div></div>
+              <div><strong>Output:</strong> <div className="problem-example-content">{ex.output}</div></div>
+              {ex.explanation && <div><strong>Explanation:</strong> <span className="problem-example-content">{ex.explanation}</span></div>}
             </div>
           ))}
         </div>
       )}
       {currentProblem.tags && currentProblem.tags.length > 0 && (
-        <div className="mt-3">
-          <h5>Tags</h5>
+        <div className="problem-tags-section">
+          <h5 className="problem-section-title">Tags</h5>
           <button
-            className="btn btn-sm btn-outline-secondary mb-2"
+            className="problem-tags-button"
             onClick={() => setShowTags((prev) => !prev)}
-            style={{ cursor: 'pointer' }}
           >
             {showTags ? 'Hide Tags' : 'Show Tags'}
           </button>
           {showTags && (
-            <div className="bg-dark text-white p-3 rounded d-flex flex-wrap gap-2">
+            <div className="problem-tags-container">
               {currentProblem.tags.map((tag, idx) => (
-                <span key={idx} className="badge bg-secondary fs-6">{tag}</span>
+                <span key={idx} className="problem-tag">{tag}</span>
               ))}
             </div>
           )}
         </div>
       )}
       {currentProblem.hints && currentProblem.hints.length > 0 && (
-        <div className="mt-3">
-          <h5>Hints</h5>
+        <div className="problem-hints-section">
+          <h5 className="problem-section-title">Hints</h5>
           <button
-            className="btn btn-sm btn-outline-info mb-2"
+            className="problem-hints-button"
             onClick={() => setShowHints((prev) => !prev)}
-            style={{ cursor: 'pointer' }}
           >
             {showHints ? 'Hide Hints' : 'Show Hints'}
           </button>
           {showHints && (
             <div>
               {currentProblem.hints.map((hint, idx) => (
-                <div key={idx} className="mb-2">
+                <div key={idx} className="problem-hint-item">
                   <button
-                    className="btn btn-outline-info btn-sm mb-2"
+                    className="problem-hint-toggle"
                     onClick={() => setHintVisibility(prev => prev.map((v, i) => i === idx ? !v : v))}
                   >
                     {hintVisibility[idx] ? `Hide Hint ${idx + 1}` : `Show Hint ${idx + 1}`}
                   </button>
                   {hintVisibility[idx] && (
-                    <div className="bg-dark text-white p-3 rounded mt-1">
+                    <div className="problem-hint-content">
                       <strong>Hint {idx + 1}:</strong> {hint}
                     </div>
                   )}

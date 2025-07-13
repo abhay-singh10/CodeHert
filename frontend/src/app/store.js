@@ -1,7 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice';
 import problemsReducer from '../features/problems/problemsSlice';
-import userReducer from '../features/user/userSlice';
 import submissionsReducer from '../features/submissions/submissionsSlice';
 import adminProblemsReducer from '../features/admin/adminProblemsSlice';
 import adminTestCasesReducer from '../features/admin/adminTestCasesSlice';
@@ -13,7 +12,6 @@ export const store = configureStore({
     submissions: submissionsReducer,
     adminProblems: adminProblemsReducer,
     adminTestCases: adminTestCasesReducer,
-    //user: userReducer,
   },
 });
  

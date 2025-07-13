@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Navbar from '../components/Navbar/Navbar';
 import ProfileHeader from '../components/Profile/ProfileHeader';
@@ -37,6 +37,11 @@ const ProfilePage = () => {
       <div className="container py-5">
         <div className="row">
           <ProfileHeader profile={profile} username={username} />
+          <div className="col-12 mb-3 d-flex justify-content-end">
+            <Link to={`/submissions/user/${username}`} className="btn btn-primary">
+              <i className="bi bi-list-check"></i> Submissions
+            </Link>
+          </div>
           <div className="col-lg-6">
             <ProfilePersonalInfo
               profile={profile}

@@ -38,7 +38,20 @@ export const fetchSubmissionsByUser = createAsyncThunk(
   'submissions/fetchSubmissionsByUser',
   async (username, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/submissions/user/${username}`);
+      const response = await axios.get(`/user/${username}/submissions`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'Failed to fetch submissions');
+    }
+  }
+);
+
+// Async thunk for fetching submissions for a problem and user
+export const fetchSubmissionsByProblemAndUser = createAsyncThunk(
+  'submissions/fetchSubmissionsByProblemAndUser',
+  async ({ problemCode, username }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/submissions/${problemCode}/${username}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to fetch submissions');
@@ -107,7 +120,7 @@ const submissionsSlice = createSlice({
       })
       .addCase(fetchSubmissionsByProblem.fulfilled, (state, action) => {
         state.loading = false;
-        state.submissions = action.payload;
+        state.submissions = action.payload.data || [];
       })
       .addCase(fetchSubmissionsByProblem.rejected, (state, action) => {
         state.loading = false;
@@ -120,9 +133,22 @@ const submissionsSlice = createSlice({
       })
       .addCase(fetchSubmissionsByUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.submissions = action.payload;
+        state.submissions = action.payload.data || [];
       })
       .addCase(fetchSubmissionsByUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Fetch submissions by problem and user
+      .addCase(fetchSubmissionsByProblemAndUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchSubmissionsByProblemAndUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.submissions = action.payload.data || [];
+      })
+      .addCase(fetchSubmissionsByProblemAndUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

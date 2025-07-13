@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { logoutUser } from '../../features/auth/authSlice';
@@ -7,6 +7,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const auth = useSelector((state) => state.auth);
+
 
   const isActive = (path) => {
     return location.pathname === path ? 'active' : '';
@@ -17,76 +18,89 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav className="modern-navbar">
       <div className="container">
-        <Link className="navbar-brand fw-bold" to="/">
-          <i className="fas fa-code me-2"></i>
-          CodeDojo
-        </Link>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav me-auto">
-            <li className="nav-item">
-              <Link className={`nav-link ${isActive('/')}`} to="/">Home</Link>
-            </li>
-            <li className="nav-item">
-              <Link className={`nav-link ${isActive('/problems')}`} to="/problems">Problems</Link>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#contest">Contest</a>
-            </li>
+        <div className="navbar-content">
+          {/* Brand Section */}
+          <Link className="navbar-brand-modern" to="/">
+            <div className="brand-icon">
+              <i className="fas fa-code"></i>
+            </div>
+            <div className="brand-text">
+              <span className="brand-title">CodeDojo</span>
+            </div>
+          </Link>
+
+          {/* Navigation Links */}
+          <div className="navbar-nav-modern">
+            <Link className={`nav-link-modern ${isActive('/')}`} to="/">
+              <i className="fas fa-home"></i>
+              <span>Home</span>
+            </Link>
+            <Link className={`nav-link-modern ${isActive('/problems')}`} to="/problems">
+              <i className="fas fa-tasks"></i>
+              <span>Problems</span>
+            </Link>
+            <a className="nav-link-modern" href="#contest">
+              <i className="fas fa-trophy"></i>
+              <span>Contest</span>
+            </a>
             {auth.isAuthenticated && auth.user && auth.user.role === 'admin' && (
-              <li className="nav-item">
-                <Link className={`nav-link ${isActive('/admin')}`} to="/admin">Admin Dashboard</Link>
-              </li>
+              <Link className={`nav-link-modern ${isActive('/admin/problems')}`} to="/admin/problems">
+                <i className="fas fa-cog"></i>
+                <span>Admin</span>
+              </Link>
             )}
-            <li className="nav-item">
-              <a className="nav-link" href="#about">About</a>
-            </li>
-          </ul>
-          <div className="d-flex">
+            <a className="nav-link-modern" href="#about">
+              <i className="fas fa-info-circle"></i>
+              <span>About</span>
+            </a>
+          </div>
+
+          {/* User Section */}
+          <div className="navbar-user-section">
             {auth.isAuthenticated && auth.user ? (
-              <div className="dropdown">
-                <button 
-                  className="btn btn-outline-light dropdown-toggle" 
-                  type="button" 
-                  data-bs-toggle="dropdown"
-                >
-                  <i className="fas fa-user me-1"></i>
-                  {auth.user.username}
+              <div className="user-dropdown-modern">
+                <button className="user-button-modern">
+                  <div className="user-avatar">
+                    <i className="fas fa-user"></i>
+                  </div>
+                  <div className="user-info">
+                    <span className="username">{auth.user.username}</span>
+                  </div>
+                  <i className="fas fa-chevron-down dropdown-arrow"></i>
                 </button>
-                <ul className="dropdown-menu">
-                  <li><Link className="dropdown-item" to={`/profile/${auth.user.username}`}>Profile</Link></li>
-                  <li><a className="dropdown-item" href="#submissions">Submissions</a></li>
-                  <li><hr className="dropdown-divider" /></li>
-                  <li>
-                    <button 
-                      className="dropdown-item" 
-                      onClick={handleLogout}
-                    >
-                      Logout
-                    </button>
-                  </li>
-                </ul>
+                <div className="dropdown-menu-modern">
+                  <Link className="dropdown-item-modern" to={`/profile/${auth.user.username}`}>
+                    <i className="fas fa-user-circle"></i>
+                    <span>Profile</span>
+                  </Link>
+                  <Link className="dropdown-item-modern" to={`/submissions/user/${auth.user.username}`}>
+                    <i className="fas fa-history"></i>
+                    <span>Submissions</span>
+                  </Link>
+                  <div className="dropdown-divider-modern"></div>
+                  <button className="dropdown-item-modern logout-item" onClick={handleLogout}>
+                    <i className="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                  </button>
+                </div>
               </div>
             ) : (
-              <>
-                <Link to="/login" className="btn btn-outline-light me-2">
-                  Login
+              <div className="auth-buttons-modern">
+                <Link to="/login" className="btn-login-modern">
+                  <i className="fas fa-sign-in-alt"></i>
+                  <span>Login</span>
                 </Link>
-                <Link to="/register" className="btn btn-primary">
-                  Register
+                <Link to="/register" className="btn-register-modern">
+                  <i className="fas fa-user-plus"></i>
+                  <span>Register</span>
                 </Link>
-              </>
+              </div>
             )}
           </div>
+
+
         </div>
       </div>
     </nav>

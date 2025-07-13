@@ -56,7 +56,7 @@ export const fetchCurrentUser = createAsyncThunk(
 const initialState = {
   user: null,
   isAuthenticated: false,
-  loading: false,
+  loading: true,
   error: null,
 };
 
@@ -108,11 +108,17 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
       })
       // Fetch current user
+      .addCase(fetchCurrentUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(fetchCurrentUser.fulfilled, (state, action) => {
+        state.loading = false;
         state.user = action.payload;
         state.isAuthenticated = true;
       })
       .addCase(fetchCurrentUser.rejected, (state) => {
+        state.loading = false;
         state.user = null;
         state.isAuthenticated = false;
       });

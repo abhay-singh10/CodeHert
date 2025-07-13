@@ -8,9 +8,11 @@ const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/auth');
 const problemRoutes = require('./routes/problem');
 const userRoutes = require('./routes/user');
+const submissionRoutes = require('./routes/submission');
 const adminProblemRoutes = require('./routes/admin/adminProblem');
 const adminTestCaseRoutes = require('./routes/admin/adminTestCase');
 const compileRoutes = require('./routes/compile');
+const aiRoutes = require('./routes/ai');
 
 // Connect to MongoDB
 connectDB();
@@ -39,6 +41,9 @@ app.use('/api/auth', authRoutes);
 //problem
 app.use('/api/problems', problemRoutes);
 
+//submissions
+app.use('/api/submissions', submissionRoutes);
+
 //admin functions
 //problems
 app.use('/api/admin/problems', authMiddleware, isAdmin, adminProblemRoutes);
@@ -52,6 +57,8 @@ app.use('/api/user', userRoutes);
 //compiler
 app.use('/api/compile', authMiddleware, compileRoutes);
 
+//Hugging face Ai
+app.use('/api/ai', aiRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;

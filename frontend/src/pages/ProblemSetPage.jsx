@@ -15,15 +15,31 @@ const ProblemsPage = () => {
   return (
     <>
       <Navbar />
-      <div className="container py-5">
-        <div className="row justify-content-center">
-          <div className="col-lg-10">
-            <div className="card shadow-lg border-0 rounded-4">
-              <div className="card-header bg-dark text-white rounded-top-4">
-                <h2 className="fw-bold mb-0">Problems</h2>
-              </div>
-              <div className="card-body">
-                <ProblemTable problems={problems} loading={loading} error={error} />
+      <div className="problems-page-wrapper">
+        <div className="container py-5">
+          <div className="row justify-content-center">
+            <div className="col-lg-11 col-xl-10">
+              <div className="problems-card">
+                <div className="problems-header">
+                  <div className="header-content">
+                    <h1 className="problems-title">
+                      <span className="title-icon">💻</span>
+                      Coding Problems
+                    </h1>
+                    <p className="problems-subtitle">Master algorithms and data structures</p>
+                  </div>
+                  <div className="header-stats">
+                    <div className="stat-item">
+                      <span className="stat-number">{problems.length}</span>
+                      <span className="stat-label">Problems</span>
+                    </div>
+                  </div>
+                </div>
+                
+                
+                <div className="problems-content">
+                  <ProblemTable problems={problems} loading={loading} error={error} />
+                </div>
               </div>
             </div>
           </div>

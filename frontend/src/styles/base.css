@@ -1,0 +1,78 @@
+/* ===== COLOR PALETTE OPTIONS ===== */
+
+:root {
+  --bs-body-bg: #181a20;
+  --bs-body-color: #e0e6ed;
+  --bs-primary: #4f8cff;
+  --bs-primary-rgb: 79,140,255;
+  --bs-secondary: #6c63ff;
+  --bs-secondary-rgb: 108,99,255;
+  --bs-success: #00bfae;
+  --bs-success-rgb: 0,191,174;
+  --bs-info: #00cfff;
+  --bs-info-rgb: 0,207,255;
+  --bs-warning: #ffb86c;
+  --bs-warning-rgb: 255,184,108;
+  --bs-danger: #ff5c8d;
+  --bs-danger-rgb: 255,92,141;
+  --bs-dark: #23272f;
+  --bs-dark-rgb: 35,39,47;
+  --bs-light: #23272f;
+  --bs-light-rgb: 35,39,47;
+  --navbar-height: 80px;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --navbar-height: 64px;
+  }
+}
+
+/* ===== CURRENT ACTIVE PALETTE ===== */
+
+body {
+  background: var(--bs-body-bg) !important;
+  color: var(--bs-body-color) !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+/* Smooth scrolling for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Focus styles for accessibility */
+button:focus,
+a:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+/* ===== UTILITY CLASSES ===== */
+
+.fs-7 {
+  font-size: 0.75rem !important;
+} 

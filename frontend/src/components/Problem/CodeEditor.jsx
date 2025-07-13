@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MonacoEditor from '@monaco-editor/react';
 
 const LANGUAGES = [
@@ -22,17 +22,20 @@ int main() {
 if __name__ == '__main__':
     main()
 `,
-  java: `
-public class Main {
+  java: `public class Main {
     public static void main(String[] args) {
         // Write your code here
     }
 }`
 };
 
-const CodeEditor = ({ onRun, onSubmit }) => {
-  const [language, setLanguage] = useState('cpp');
-  const [code, setCode] = useState(BOILERPLATES['cpp']);
+const CodeEditor = ({ onRun, onSubmit, code, setCode, language, setLanguage, extraButton }) => {
+  // Set C++ boilerplate on first mount if code is empty
+  useEffect(() => {
+    if (!code && language === 'cpp') {
+      setCode(BOILERPLATES['cpp']);
+    }
+  }, []); // Only run on mount
 
   const handleLanguageChange = (lang) => {
     setLanguage(lang);
@@ -40,17 +43,17 @@ const CodeEditor = ({ onRun, onSubmit }) => {
   };
 
   return (
-    <div className="card shadow-lg border-0 rounded-4" style={{ minHeight: 420, background: '#23272f' }}>
+    <div className="code-editor-card">
       {/* Header Bar */}
-      <div className="card-header d-flex justify-content-between align-items-center bg-dark text-white rounded-top-4" style={{ borderBottom: '1px solid #444' }}>
-        <span className="fw-bold">
-          <i className="bi bi-code-slash me-2"></i>Code Editor
+      <div className="code-editor-header" style={{ padding: '0.25em 0.5em', minHeight: '32px', fontSize: '0.95em' }}>
+        <span className="code-editor-title" style={{ fontSize: '1em' }}>
+          <i className="bi bi-code-slash"></i>Code Editor
         </span>
         <select
-          className="form-select form-select-sm w-auto bg-dark text-white border-secondary"
+          className="code-editor-select"
           value={language}
           onChange={e => handleLanguageChange(e.target.value)}
-          style={{ minWidth: 100 }}
+          style={{ fontSize: '0.95em', padding: '0.2em 0.5em', height: '28px' }}
         >
           {LANGUAGES.map(lang => (
             <option key={lang.value} value={lang.value}>{lang.label}</option>
@@ -58,12 +61,12 @@ const CodeEditor = ({ onRun, onSubmit }) => {
         </select>
       </div>
       {/* Monaco Editor */}
-      <div className="card-body p-0" style={{ background: '#23272f' }}>
+      <div className="code-editor-body">
         <MonacoEditor
-          height="300px"
+          height="100%"
           language={language}
           value={code}
-          onChange={setCode}
+          onChange={(value) => setCode(value)}
           theme="vs-dark"
           options={{
             fontSize: 16,
@@ -77,14 +80,15 @@ const CodeEditor = ({ onRun, onSubmit }) => {
           }}
         />
       </div>
-      {/* Run/Submit Buttons */}
-      <div className="card-footer bg-dark d-flex justify-content-end gap-2 rounded-bottom-4">
-        <button className="btn btn-outline-primary px-4" onClick={() => onRun(code, language)}>
-          <i className="bi bi-play-fill me-1"></i>Run
+      {/* Run/Submit/AI Review Buttons */}
+      <div className="code-editor-footer" style={{ padding: '0.25em 0.5em', minHeight: '32px', fontSize: '0.95em' }}>
+        <button className="btn-run" style={{ fontSize: '0.95em', padding: '0.3em 1em' }} onClick={() => onRun(code, language)}>
+          <i className="bi bi-play-fill"></i>Run
         </button>
-        <button className="btn btn-primary px-4" onClick={() => onSubmit(code, language)}>
-          <i className="bi bi-upload me-1"></i>Submit
+        <button className="btn-submit" style={{ fontSize: '0.95em', padding: '0.3em 1em' }} onClick={() => onSubmit(code, language)}>
+          <i className="bi bi-upload"></i>Submit
         </button>
+        {extraButton && React.cloneElement(extraButton, { style: { ...(extraButton.props.style || {}), fontSize: '0.95em', padding: '0.3em 1em' } })}
       </div>
     </div>
   );
