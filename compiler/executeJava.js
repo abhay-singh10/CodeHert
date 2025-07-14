@@ -12,6 +12,8 @@ const executeJava = (filepath, input = '') => {
     return new Promise((resolve, reject) => {
         // Use environment variable for java path, fallback to 'java'
         const javaPath = process.env.JAVA_PATH || 'java';
+        const jobId = path.basename(filepath).split(".")[0];
+        const outPath = path.join(outputPath, `${jobId}.txt`);
 
         // Spawn the Java process
         const run = spawn(javaPath, [filepath]);
@@ -31,6 +33,9 @@ const executeJava = (filepath, input = '') => {
 
         // Handle process errors
         run.on("error", (err) => {
+            // Cleanup files on runtime error
+            try { fs.unlinkSync(filepath); } catch (e) {}
+            try { fs.unlinkSync(outPath); } catch (e) {}
             reject({
                 type: "runtime",
                 message: "Failed to start Java process",
@@ -40,6 +45,9 @@ const executeJava = (filepath, input = '') => {
 
         // Handle process close event
         run.on("close", (code) => {
+            // Always cleanup after process ends
+            try { fs.unlinkSync(filepath); } catch (e) {}
+            try { fs.unlinkSync(outPath); } catch (e) {}
             if (code !== 0) {
                 const details = (stderr && stderr.trim()) ? stderr : (stdout && stdout.trim()) ? stdout : `Process exited with code ${code}`;
                 return reject({

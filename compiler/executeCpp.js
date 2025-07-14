@@ -19,6 +19,9 @@ const executeCpp = (filepath, input = '') => {
         // Compile first
         exec(`${gppPath} ${filepath} -o ${outPath}`, (compileError, _, compileStderr) => {
             if (compileError) {
+                // Cleanup files on compilation error
+                try { fs.unlinkSync(filepath); } catch (e) {}
+                try { fs.unlinkSync(outPath); } catch (e) {}
                 return reject({
                     type: 'compilation',
                     message: 'Compilation failed',
@@ -40,6 +43,9 @@ const executeCpp = (filepath, input = '') => {
             run.stderr.on('data', (data) => { stderr += data; });
 
             run.on('error', (err) => {
+                // Cleanup files on runtime error
+                try { fs.unlinkSync(filepath); } catch (e) {}
+                try { fs.unlinkSync(outPath); } catch (e) {}
                 reject({
                     type: 'runtime',
                     message: 'Failed to start process',
@@ -48,6 +54,9 @@ const executeCpp = (filepath, input = '') => {
             });
 
             run.on('close', (code) => {
+                // Always cleanup after process ends
+                try { fs.unlinkSync(filepath); } catch (e) {}
+                try { fs.unlinkSync(outPath); } catch (e) {}
                 if (code !== 0) {
                     const details = (stderr && stderr.trim()) ? stderr : (stdout && stdout.trim()) ? stdout : `Process exited with code ${code}`;
                     return reject({
