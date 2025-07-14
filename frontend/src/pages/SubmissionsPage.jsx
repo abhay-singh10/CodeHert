@@ -1,22 +1,39 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { fetchSubmissionsByUser, fetchSubmissionsByProblem } from '../features/submissions/submissionsSlice';
+import { fetchSubmissionsByUser, fetchSubmissionsByProblem, fetchSubmissionsByProblemAndUser } from '../features/submissions/submissionsSlice';
 import SubmissionsTable from '../components/Submission/SubmissionsTable';
 import Navbar from '../components/Navbar/Navbar';
+import MonacoEditor from '@monaco-editor/react';
 
 const SubmissionsPage = () => {
   const dispatch = useDispatch();
-  const { username } = useParams();
+  const { username: paramUsername, problemCode } = useParams();
   const { submissions, loading, error } = useSelector(state => state.submissions);
+  const authUser = useSelector(state => state.auth.user);
+  const [viewingSubmission, setViewingSubmission] = useState(null);
 
   useEffect(() => {
-    if (username) {
+    const username = paramUsername || authUser?.username;
+    if (username && problemCode) {
+      dispatch(fetchSubmissionsByProblemAndUser({ problemCode, username }));
+    } else if (username) {
       dispatch(fetchSubmissionsByUser(username));
+    } else if (problemCode) {
+      dispatch(fetchSubmissionsByProblem(problemCode));
     } else {
       dispatch(fetchSubmissionsByProblem('ALL'));
     }
-  }, [dispatch, username]);
+  }, [dispatch, paramUsername, problemCode, authUser]);
+
+  const handleVerdictClick = (submission) => {
+    setViewingSubmission(submission);
+    document.body.style.overflow = 'hidden';
+  };
+  const handleCloseModal = () => {
+    setViewingSubmission(null);
+    document.body.style.overflow = '';
+  };
 
   return (
     <>
@@ -33,7 +50,7 @@ const SubmissionsPage = () => {
                       Submissions
                     </h1>
                     <p className="problems-subtitle">
-                      {username ? `All submissions by @${username}` : 'See all recent submissions'}
+                      {paramUsername ? `All submissions by @${paramUsername}` : 'See all recent submissions'}
                     </p>
                   </div>
                   <div className="header-stats">
@@ -44,13 +61,46 @@ const SubmissionsPage = () => {
                   </div>
                 </div>
                 <div className="problems-content">
-                  <SubmissionsTable submissions={submissions} loading={loading} error={error} />
+                  <SubmissionsTable submissions={submissions} loading={loading} error={error} onVerdictClick={handleVerdictClick} />
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      {/* Modal for viewing submitted code */}
+      {viewingSubmission && (
+        <div className="testcase-view-modal-overlay" onClick={handleCloseModal}>
+          <div className="testcase-view-modal" onClick={e => e.stopPropagation()}>
+            <div className="testcase-view-modal-header">
+              <h3 className="testcase-view-modal-title">
+                <span className="title-icon">💻</span>
+                Submitted Code
+              </h3>
+              <button className="testcase-view-modal-close" onClick={handleCloseModal}>
+                <span>×</span>
+              </button>
+            </div>
+            <div className="testcase-view-modal-body">
+              <div style={{ height: '400px', minHeight: 200 }}>
+                <MonacoEditor
+                  height="100%"
+                  defaultLanguage={viewingSubmission.language || 'cpp'}
+                  value={viewingSubmission.code}
+                  options={{
+                    readOnly: true,
+                    fontSize: 16,
+                    minimap: { enabled: false },
+                    scrollBeyondLastLine: false,
+                    wordWrap: 'on',
+                    theme: 'vs-dark'
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

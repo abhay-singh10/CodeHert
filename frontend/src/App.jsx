@@ -34,6 +34,8 @@ function App() {
             <Route path="/profile/:username" element={<ProfilePage />} />
             <Route path="/problems" element={<ProblemSetPage />} />
             <Route path="/problems/:problemCode" element={<ProblemPage />} />
+            <Route path="/problems/:problemCode/all-submissions" element={<SubmissionsPage />} />
+            <Route path="/problems/:problemCode/my-submissions" element={<SubmissionsPage />} />
             <Route path="/submissions/user/:username" element={<SubmissionsPage />} />
             <Route path="/admin/problems" element={
               <ProtectedRoute requireAdmin={true}>
