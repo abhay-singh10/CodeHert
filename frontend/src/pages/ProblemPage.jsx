@@ -76,7 +76,6 @@ const ProblemPage = () => {
       const review = await getAICodeReview({
         problemName: currentProblem.name,
         problemStatement: currentProblem.statement,
-        tags: currentProblem.tags,
         code: editorCode,
         language: editorLanguage
       });

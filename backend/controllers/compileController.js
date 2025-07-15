@@ -13,6 +13,23 @@ function normalizeOutput(str) {
         .trim();
 }
 
+function cleanErrorDetails(details) {
+  if (!details) return '';
+  // Replace any .cpp, .py, .java file path with a generic name (Windows or Unix)
+  return details
+    .replace(/[A-Za-z]:\\[^\r\n]+?compiler\\codes\\[^\r\n]+?\.cpp/g, 'main.cpp')
+    .replace(/[A-Za-z]:\\[^\r\n]+?compiler\\codes\\[^\r\n]+?\.py/g, 'main.py')
+    .replace(/[A-Za-z]:\\[^\r\n]+?compiler\\codes\\[^\r\n]+?\.java/g, 'Main.java')
+    // Also match Unix-style paths just in case
+    .replace(/[A-Za-z]?:?\/?[^\r\n]+?\/compiler\/codes\/[^\r\n]+?\.cpp/g, 'main.cpp')
+    .replace(/[A-Za-z]?:?\/?[^\r\n]+?\/compiler\/codes\/[^\r\n]+?\.py/g, 'main.py')
+    .replace(/[A-Za-z]?:?\/?[^\r\n]+?\/compiler\/codes\/[^\r\n]+?\.java/g, 'Main.java')
+    // Docker-specific /app/codes/uuid.cpp
+    .replace(/\/app\/codes\/[^\r\n]+?\.cpp/g, 'main.cpp')
+    .replace(/\/app\/codes\/[^\r\n]+?\.py/g, 'main.py')
+    .replace(/\/app\/codes\/[^\r\n]+?\.java/g, 'Main.java');
+}
+
 // @route   POST /api/compile/run
 exports.run = async (req, res) => {
     const { language, code, input } = req.body;
@@ -25,10 +42,22 @@ exports.run = async (req, res) => {
         res.json(response.data);
     } catch (error) {
         const err = error.response?.data;
-        if (err && err.error) {
+        // Clean error details and message if present
+        if (err && typeof err === 'object') {
+            if (err.details) {
+                err.details = cleanErrorDetails(err.details);
+            }
+            if (err.message) {
+                err.message = cleanErrorDetails(err.message);
+            }
             res.status(500).json(err);
+        } else if (err && typeof err === 'object') {
+            res.status(500).json({ ...err, message: 'An error occurred' });
         } else {
-            res.status(500).json({ error: err || error.message });
+            res.status(500).json({
+                type: 'runtime',
+                message: err || error.message || 'An error occurred'
+            });
         }
     }
 };
@@ -76,12 +105,12 @@ exports.submit = async (req, res) => {
                     break;
                 }
             } catch (error) {
-                let isCompilationError = false;
                 let errorType = 'runtime_error';
                 if (error.response && error.response.data && error.response.data.type === 'compilation') {
                   result = `Compilation Error on TC${testcase.index}`;
                   errorType = 'compilation_error';
-                  isCompilationError = true;
+                } else if(error.response && error.response.data &&  error.response.data.type === 'tle'){
+                    result = `Time limit exceeded on TC${testcase.index}`;
                 } else {
                   result = `Runtime error on TC${testcase.index}`;
                 }

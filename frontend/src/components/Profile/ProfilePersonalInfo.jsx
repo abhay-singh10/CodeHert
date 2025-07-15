@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from '../../api/axios';
-import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutUser } from '../../features/auth/authSlice';
 
 const ProfilePersonalInfo = ({
   profile,
@@ -8,7 +10,6 @@ const ProfilePersonalInfo = ({
   error,
   isOwnProfile
 }) => {
-  const { user: loggedInUser } = useSelector((state) => state.auth);
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({
     first_name: profile?.first_name || '',
@@ -19,14 +20,26 @@ const ProfilePersonalInfo = ({
   const [updateError, setUpdateError] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
 
-  // Update form fields if profile changes
-  React.useEffect(() => {
-    setFormData({
-      first_name: profile?.first_name || '',
-      last_name: profile?.last_name || '',
-      email: profile?.email || '',
-    });
-  }, [profile]);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user: loggedInUser } = useSelector((state) => state.auth);
+
+  // Update form fields if profile or loggedInUser changes
+  useEffect(() => {
+    if (isOwnProfile && loggedInUser) {
+      setFormData({
+        first_name: loggedInUser.first_name || '',
+        last_name: loggedInUser.last_name || '',
+        email: loggedInUser.email || '',
+      });
+    } else {
+      setFormData({
+        first_name: profile?.first_name || '',
+        last_name: profile?.last_name || '',
+        email: profile?.email || '',
+      });
+    }
+  }, [profile, isOwnProfile, loggedInUser]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -46,6 +59,20 @@ const ProfilePersonalInfo = ({
       setUpdateError(err.response?.data?.message || err.message || 'Update failed');
     } finally {
       setUpdateLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) return;
+    try {
+      await axios.delete(`/user/${profile.username}`);
+      // Clear auth state and tokens
+      dispatch(logoutUser());
+      localStorage.removeItem('token');
+      alert('Your account has been deleted.');
+      navigate('/');
+    } catch (err) {
+      alert(err.response?.data?.error || err.message || 'Failed to delete account');
     }
   };
 
@@ -100,10 +127,16 @@ const ProfilePersonalInfo = ({
           <span>Personal Information</span>
         </div>
         {isOwnProfile && !editMode && (
-          <button className="btn-edit-profile" onClick={() => setEditMode(true)}>
-            <i className="fas fa-edit"></i>
-            Edit
-          </button>
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <button className="btn-edit-profile" onClick={() => setEditMode(true)}>
+              <i className="fas fa-edit"></i>
+              Edit
+            </button>
+            <button className="btn-cancel" style={{ color: 'red', borderColor: 'red' }} onClick={handleDelete}>
+              <i className="fas fa-trash"></i>
+              Delete Account
+            </button>
+          </div>
         )}
       </div>
       <div className="profile-card-content">
@@ -174,10 +207,6 @@ const ProfilePersonalInfo = ({
             <div className="info-item">
               <label>Username</label>
               <span>@{profile.username}</span>
-            </div>
-            <div className="info-item">
-              <label>Rating</label>
-              <span className="rating-value">{profile.rating ?? 0}</span>
             </div>
           </div>
         )}

@@ -19,4 +19,7 @@ router.get('/:username', userController.getPublicUserProfile);
 // @desc    Get public user submissions by username (public)
 router.get('/:username/submissions', userController.getPublicUserSubmissions);
 
+//@route DELETE/api/user/:username
+router.delete('/:username', authMiddleware, userController.deleteUserProfile);
+
 module.exports = router; 

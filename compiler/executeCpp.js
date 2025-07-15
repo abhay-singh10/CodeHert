@@ -13,11 +13,8 @@ const executeCpp = (filepath, input = '') => {
     const outPath = path.join(outputPath, `${jobId}.exe`);
 
     return new Promise((resolve, reject) => {
-        // Use environment variable for g++ path, fallback to 'g++'
-        const gppPath = process.env.GPP_PATH || 'g++';
-        
         // Compile first
-        exec(`${gppPath} ${filepath} -o ${outPath}`, (compileError, _, compileStderr) => {
+        exec(`g++ ${filepath} -o ${outPath}`, (compileError, _, compileStderr) => {
             if (compileError) {
                 // Cleanup files on compilation error
                 try { fs.unlinkSync(filepath); } catch (e) {}
@@ -33,14 +30,25 @@ const executeCpp = (filepath, input = '') => {
             const run = spawn(outPath, [], { cwd: outputPath });
             let stdout = '';
             let stderr = '';
+            // Set up a 1 second timeout for TLE
+            const TLE_TIMEOUT = 1000; 
+            let tle = false;
+            const tleTimer = setTimeout(() => {
+                tle = true;
+                run.kill('SIGKILL');
+            }, TLE_TIMEOUT);
 
             if (input) {
                 run.stdin.write(input);
             }
             run.stdin.end();
 
-            run.stdout.on('data', (data) => { stdout += data; });
+            run.stdout.on('data', (data) => {
+                stdout += data;
+            });
             run.stderr.on('data', (data) => { stderr += data; });
+
+            
 
             run.on('error', (err) => {
                 // Cleanup files on runtime error
@@ -53,10 +61,18 @@ const executeCpp = (filepath, input = '') => {
                 });
             });
 
-            run.on('close', (code) => {
+            run.on('close', (code, signal) => {
+                clearTimeout(tleTimer);
                 // Always cleanup after process ends
                 try { fs.unlinkSync(filepath); } catch (e) {}
                 try { fs.unlinkSync(outPath); } catch (e) {}
+                if (tle || signal === 'SIGKILL') {
+                    return reject({
+                        type: 'tle',
+                        message: 'Time Limit Exceeded',
+                        details: 'Process exceeded 1 second time limit.'
+                    });
+                }
                 if (code !== 0) {
                     const details = (stderr && stderr.trim()) ? stderr : (stdout && stdout.trim()) ? stdout : `Process exited with code ${code}`;
                     return reject({

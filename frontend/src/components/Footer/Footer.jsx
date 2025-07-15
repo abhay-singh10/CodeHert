@@ -10,18 +10,17 @@ const Footer = () => (
             <i className="fas fa-code"></i>
           </div>
           <div className="footer-text">
-            <span className="footer-title">CodeDojo</span>
+            <span className="footer-title">CodeHert</span>
           </div>
         </div>
         
         <div className="footer-links">
           <Link to="/problems" className="footer-link">Problems</Link>
-          <a href="#about" className="footer-link">About</a>
-          <a href="#contact" className="footer-link">Contact</a>
+          <Link to="/about" className="footer-link">About</Link>
         </div>
         
         <div className="footer-copyright">
-          <span>© 2025 CodeDojo. All rights reserved.</span>
+          <span>© 2025 CodeHert. All rights reserved.</span>
         </div>
       </div>
     </div>

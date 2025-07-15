@@ -9,12 +9,6 @@ const exitCodeMap = {
   // Add more as needed
 };
 
-// Custom style for deep red in verdict
-const deepRedStyle = {
-  backgroundColor: '#b3001b',
-  borderColor: '#b3001b',
-};
-
 const IOVerdictBox = ({ input, onInputChange, runResult, submissionResult, forceTab, onTabChange, aiReview }) => {
   const [activeTab, setActiveTab] = useState('input');
 
@@ -65,7 +59,6 @@ const IOVerdictBox = ({ input, onInputChange, runResult, submissionResult, force
 
   let verdict = '';
   if (submissionResult) {
-    console.log('DEBUG submissionResult:', submissionResult); // Debug log
     verdict = submissionResult.result || submissionResult.error || '';
   }
 

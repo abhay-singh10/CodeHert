@@ -55,9 +55,12 @@ const SubmissionsTable = ({ submissions = [], loading, error, onVerdictClick }) 
 function getVerdictClass(verdict) {
   if (!verdict) return 'bg-secondary';
   if (verdict.toLowerCase().includes('accepted')) return 'bg-success';
-  if (verdict.toLowerCase().includes('wrong')) return 'bg-danger';
-  if (verdict.toLowerCase().includes('compilation')) return 'bg-warning text-dark';
-  if (verdict.toLowerCase().includes('runtime')) return 'bg-danger';
+  if (
+    verdict.toLowerCase().includes('wrong') ||
+    verdict.toLowerCase().includes('compilation') ||
+    verdict.toLowerCase().includes('runtime') ||
+    verdict.toLowerCase().includes('time limit')
+  ) return 'bg-danger';
   return 'bg-secondary';
 }
 

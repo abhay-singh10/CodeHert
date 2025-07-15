@@ -9,14 +9,12 @@ if (!fs.existsSync(outputPath)) {
 }
 
 const executePython = (filepath, input = '') => {
-    const jobId = path.basename(filepath).split(".")[0];
-    const outPath = path.join(outputPath, `${jobId}.txt`);
     return new Promise((resolve, reject) => {
         // Use environment variable for Python path, fallback to 'python'
-        const pythonPath = process.env.PYTHON_PATH || 'python';
+        const pythonPath = process.env.PYTHON_PATH || 'python3';
         
         // Run the Python file with spawn
-        const run = spawn(pythonPath, [filepath], { cwd: outputPath });
+        const run = spawn(pythonPath, [filepath]);
         let stdout = '';
         let stderr = '';
 
@@ -25,13 +23,20 @@ const executePython = (filepath, input = '') => {
         }
         run.stdin.end();
 
+        // Set up a 1 second timeout for TLE
+        const TLE_TIMEOUT = 2000; // 2 second in milliseconds because python is slower
+        let tle = false;
+        const tleTimer = setTimeout(() => {
+            tle = true;
+            run.kill('SIGKILL');
+        }, TLE_TIMEOUT);
+
         run.stdout.on('data', (data) => { stdout += data; });
         run.stderr.on('data', (data) => { stderr += data; });
 
         run.on('error', (err) => {
             // Cleanup files on runtime error
             try { fs.unlinkSync(filepath); } catch (e) {}
-            try { fs.unlinkSync(outPath); } catch (e) {}
             reject({
                 type: 'runtime',
                 message: 'Failed to start process',
@@ -39,10 +44,18 @@ const executePython = (filepath, input = '') => {
             });
         });
 
-        run.on('close', (code) => {
+        run.on('close', (code, signal) => {
+            clearTimeout(tleTimer);
             // Always cleanup after process ends
             try { fs.unlinkSync(filepath); } catch (e) {}
-            try { fs.unlinkSync(outPath); } catch (e) {}
+            //check for tle
+            if (tle || signal === 'SIGKILL') {
+                return reject({
+                    type: 'tle',
+                    message: 'Time Limit Exceeded',
+                    details: 'Process exceeded 1 second time limit.'
+                });
+            }
             if (code !== 0) {
                 const details = (stderr && stderr.trim()) ? stderr : (stdout && stdout.trim()) ? stdout : `Process exited with code ${code}`;
                 return reject({

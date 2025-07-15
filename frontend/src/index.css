@@ -2366,6 +2366,7 @@ a:focus {
   border-radius: 50%;
   animation: pulse 4s ease-in-out infinite;
   z-index: 1;
+  pointer-events: none;
 }
 
 /* Responsive Design */
@@ -3079,7 +3080,7 @@ a:focus {
   background: rgba(0, 0, 0, 0.8) !important;
   padding: 1.5rem !important;
   min-height: 120px;
-  max-height: 300px;
+  max-height: 500px;
 }
 
 .io-verdict-input {

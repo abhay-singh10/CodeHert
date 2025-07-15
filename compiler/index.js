@@ -31,7 +31,15 @@ app.post("/run", async (req, res) => {
         }
         res.json({ output });
     } catch (error) {
-        res.status(500).json({ error: error });
+        if (error instanceof Error) {
+            res.status(500).json({
+                type: error.type || 'runtime',
+                message: error.message,
+                details: error.details || error.stack
+            });
+        } else {
+            res.status(500).json(error);
+        }
     }
 });
 

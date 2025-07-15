@@ -12,6 +12,7 @@ import TestCasePage from './pages/admin/TestCasePage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useSelector } from 'react-redux';
 import SubmissionsPage from './pages/SubmissionsPage';
+import AboutPage from './pages/AboutPage';
 
 function App() {
   const loading = useSelector(state => state.auth.loading);
@@ -52,6 +53,7 @@ function App() {
                 <TestCasePage />
               </ProtectedRoute>
             } />
+            <Route path="/about" element={<AboutPage />} />
           </Routes>
         </div>
       )}

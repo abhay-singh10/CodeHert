@@ -4,8 +4,8 @@ const Features = () => {
   const features = [
     {
       icon: 'fas fa-puzzle-piece',
-      title: '500+ Problems',
-      description: 'From easy to hard, covering all major algorithms and data structures.',
+      title: 'Quality Problems',
+      description: 'Carefully curated, high-quality problems covering all major algorithms and data structures.',
       color: 'cyan'
     },
     {
@@ -15,9 +15,9 @@ const Features = () => {
       color: 'magenta'
     },
     {
-      icon: 'fas fa-trophy',
-      title: 'Competitions',
-      description: 'Participate in weekly contests and climb the leaderboard.',
+      icon: 'fas fa-robot',
+      title: 'AI Code Review',
+      description: 'Get instant, concise feedback on your code from our integrated AI reviewer. Improve your code quality and learn best practices!',
       color: 'cyan'
     }
   ];
@@ -29,7 +29,7 @@ const Features = () => {
       </div>
       <div className="container">
         <div className="features-header">
-          <h2 className="features-title">Why Choose CodeDojo?</h2>
+          <h2 className="features-title">Why Choose CodeHert?</h2>
           <p className="features-subtitle">
             Everything you need to become a better programmer
           </p>

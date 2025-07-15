@@ -9,10 +9,21 @@ const ProblemDetails = () => {
   const { problemCode } = useParams();
   const dispatch = useDispatch();
   const { currentProblem, loading, error } = useSelector(state => state.problems);
+  const user = useSelector(state => state.auth.user);
   const [showTags, setShowTags] = useState(false);
   // Track which hints are revealed
   const [hintVisibility, setHintVisibility] = useState([]);
   const [showHints, setShowHints] = useState(false);
+
+
+  let status = null;
+  if (user && currentProblem?.code) {
+    if (user.problemsSolved?.includes(currentProblem.code)) {
+      status = 'solved';
+    } else if (user.problemsAttempted?.includes(currentProblem.code)) {
+      status = 'attempted';
+    }
+  }
 
   useEffect(() => {
     if (problemCode) {
@@ -30,7 +41,19 @@ const ProblemDetails = () => {
 
   return (
     <div>
-      <h2 className="problem-title">{currentProblem.name}</h2>
+      <h2 className="problem-title">
+        {currentProblem.name}
+        {status === 'solved' && (
+          <span className="problem-status-badge solved" title="Solved" style={{marginLeft: '0.3em', color: 'var(--bs-success, #00bfae)', fontSize: '0.455em', verticalAlign: 'middle'}}>
+            &#10003; Solved
+          </span>
+        )}
+        {status === 'attempted' && (
+          <span className="problem-status-badge attempted" title="Attempted" style={{marginLeft: '0.3em', color: 'orange', fontSize: '0.455em', verticalAlign: 'middle'}}>
+            &#9679; Attempted
+          </span>
+        )}
+      </h2>
       {currentProblem.difficulty && (
         <div className="problem-difficulty">
           <span className={`problem-difficulty-badge ${currentProblem.difficulty.toLowerCase()}`}>

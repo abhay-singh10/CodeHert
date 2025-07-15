@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { logoutUser } from '../../features/auth/authSlice';
@@ -27,7 +26,7 @@ const Navbar = () => {
               <i className="fas fa-code"></i>
             </div>
             <div className="brand-text">
-              <span className="brand-title">CodeDojo</span>
+              <span className="brand-title">CodeHert</span>
             </div>
           </Link>
 
@@ -41,20 +40,16 @@ const Navbar = () => {
               <i className="fas fa-tasks"></i>
               <span>Problems</span>
             </Link>
-            <a className="nav-link-modern" href="#contest">
-              <i className="fas fa-trophy"></i>
-              <span>Contest</span>
-            </a>
             {auth.isAuthenticated && auth.user && auth.user.role === 'admin' && (
               <Link className={`nav-link-modern ${isActive('/admin/problems')}`} to="/admin/problems">
                 <i className="fas fa-cog"></i>
                 <span>Admin</span>
               </Link>
             )}
-            <a className="nav-link-modern" href="#about">
+            <Link className={`nav-link-modern ${isActive('/about')}`} to="/about">
               <i className="fas fa-info-circle"></i>
               <span>About</span>
-            </a>
+            </Link>
           </div>
 
           {/* User Section */}
