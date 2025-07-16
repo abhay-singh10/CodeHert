@@ -82,7 +82,8 @@ exports.login = async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
+            //samesite: 'lax' for localhost browser
+            sameSite: 'none', //for hosting render 
             maxAge: 6 * 60 * 60 * 1000 // 6 hours
         });
 
@@ -104,7 +105,8 @@ exports.logout = async (req, res) => {
         // Clear the JWT cookie
         res.clearCookie('token', {
             httpOnly: true,
-            sameSite: 'lax',
+            //sameSite: 'lax',
+            sameSite: 'none', //for hosting
             secure: process.env.NODE_ENV === 'production'
         });
         res.json({
