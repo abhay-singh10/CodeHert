@@ -14,7 +14,7 @@ const Hero = () => {
               Master Your Coding Skills
             </h1>
             <p className="hero-subtitle">
-              Join thousands of developers solving algorithmic challenges, 
+              Join a vibrant community of coders solving algorithmic challenges, 
               improving their problem-solving skills, and competing with peers 
               in our comprehensive online judge platform.
             </p>
