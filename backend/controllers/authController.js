@@ -32,29 +32,13 @@ exports.register = async (req, res) => {
 
         await newUser.save();
 
-        // Generate JWT token for new user
-        const token = jwt.sign(
-            { userId: newUser._id, username: newUser.username, role: newUser.role },
-            process.env.JWT_SECRET,
-            { expiresIn: '1h' }
-        );
-
         // Convert user to plain object and remove password
         const userObj = newUser.toObject();
         delete userObj.password;
 
-        // Set JWT as HttpOnly cookie
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
-            maxAge: 60 * 60 * 1000 // 1 hour
-        });
-
         res.status(201).json({
             message: 'User registered successfully',
-            user: userObj,
-            token // add token to response
+            user: userObj
         });
 
     } catch (err) {
@@ -87,7 +71,7 @@ exports.login = async (req, res) => {
         const token = jwt.sign(
             { userId: user._id, username: user.username, role: user.role },
             process.env.JWT_SECRET,
-            { expiresIn: '1h' }
+            { expiresIn: '6h' }
         );
 
         // Convert user to plain object and remove password
@@ -99,7 +83,7 @@ exports.login = async (req, res) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
-            maxAge: 60 * 60 * 1000 // 1 hour
+            maxAge: 6 * 60 * 60 * 1000 // 6 hours
         });
 
         res.status(200).json({
