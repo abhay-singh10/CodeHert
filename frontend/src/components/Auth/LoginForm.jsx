@@ -24,7 +24,7 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const result = await dispatch(loginUser(formData)).unwrap();
-      navigate(`/profile/${result.user.username}`);
+      navigate(`/user/${result.user.username}`);
     } catch (error) {
       // Error is handled by Redux
     }

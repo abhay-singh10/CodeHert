@@ -22,7 +22,7 @@ const SubmissionsTable = ({ submissions = [], loading, error, onVerdictClick }) 
             {submissions.map((sub, idx) => (
               <tr key={idx}>
                 <td>
-                  <Link to={`/profile/${sub.username}`} className="text-decoration-none fw-semibold">
+                  <Link to={`/user/${sub.username}`} className="text-decoration-none fw-semibold">
                     {sub.username}
                   </Link>
                 </td>

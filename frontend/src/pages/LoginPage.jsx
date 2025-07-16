@@ -10,7 +10,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (isAuthenticated && user && user.username) {
-      navigate(`/profile/${user.username}`, { replace: true });
+      navigate(`/user/${user.username}`, { replace: true });
     }
   }, [isAuthenticated, user, navigate]);
 

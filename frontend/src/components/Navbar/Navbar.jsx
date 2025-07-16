@@ -68,7 +68,7 @@ const Navbar = () => {
                   <i className="fas fa-chevron-down dropdown-arrow"></i>
                 </button>
                 <div className="dropdown-menu-modern">
-                  <Link className="dropdown-item-modern" to={`/profile/${auth.user.username}`}>
+                  <Link className="dropdown-item-modern" to={`/user/${auth.user.username}`}>
                     <i className="fas fa-user-circle"></i>
                     <span>Profile</span>
                   </Link>
