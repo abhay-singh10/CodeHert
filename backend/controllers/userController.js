@@ -107,6 +107,11 @@ exports.deleteUserProfile = async (req, res) => {
     if (!deletedUser) {
       return res.status(404).json({ error: 'User not found' });
     }
+    // Anonymize submissions (only set user to null)
+    await Submission.updateMany(
+      { user: deletedUser._id },
+      { $set: { user: null } }
+    );
     res.json({ success: true, message: 'User deleted successfully', data: deletedUser });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
