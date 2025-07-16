@@ -3,6 +3,8 @@ const TestCase = require('../models/TestCase');
 const Submission = require('../models/Submission');
 const Problem = require('../models/Problem');
 
+const COMPILER_URL = process.env.COMPILER_URL || 'http://localhost:8000/run';
+
 function normalizeOutput(str) {
     return (str || '')
         .replace(/\r\n/g, '\n') // Normalize line endings
@@ -34,7 +36,7 @@ function cleanErrorDetails(details) {
 exports.run = async (req, res) => {
     const { language, code, input } = req.body;
     try {
-        const response = await axios.post('http://localhost:8000/run', {
+        const response = await axios.post(COMPILER_URL, {
             language,
             code,
             input
@@ -84,7 +86,7 @@ exports.submit = async (req, res) => {
 
         for (const testcase of testcases) {
             try {
-                const response = await axios.post('http://localhost:8000/run', {
+                const response = await axios.post(COMPILER_URL, {
                     language,
                     code,
                     input: testcase.input

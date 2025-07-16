@@ -1,10 +1,11 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { logoutUser } from '../../features/auth/authSlice';
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
   const auth = useSelector((state) => state.auth);
 
 
@@ -12,8 +13,9 @@ const Navbar = () => {
     return location.pathname === path ? 'active' : '';
   };
   
-  const handleLogout = () => {
-    dispatch(logoutUser());
+  const handleLogout = async () => {
+    await dispatch(logoutUser());
+    navigate('/login');
   };
 
   return (

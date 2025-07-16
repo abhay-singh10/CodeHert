@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 const exitCodeMap = {
   3221225477: "Segmentation fault (access violation)",
@@ -6,7 +7,6 @@ const exitCodeMap = {
   3221225781: "Division by zero",
   3221225620: "Division by zero",
   3221226356: "Invalid memory reference",
-  // Add more as needed
 };
 
 const IOVerdictBox = ({ input, onInputChange, runResult, submissionResult, forceTab, onTabChange, aiReview }) => {
@@ -159,7 +159,13 @@ const IOVerdictBox = ({ input, onInputChange, runResult, submissionResult, force
             <div className="ai-review-header" style={{ display: 'flex', alignItems: 'center', gap: '0.5em', marginBottom: '0.5em', color: '#3b82f6', fontWeight: 600, fontSize: '1.1em' }}>
               <span role="img" aria-label="robot">🤖</span> AI Code Review
             </div>
-            <pre className="ai-review-output">{aiReview}</pre>
+            <div className="ai-review-output">
+              {typeof aiReview === 'string' ? (
+                <ReactMarkdown>{aiReview}</ReactMarkdown>
+              ) : (
+                <ReactMarkdown>{aiReview?.review || ''}</ReactMarkdown>
+              )}
+            </div>
           </div>
         )}
         {activeTab === 'review' && !aiReview && (

@@ -10,7 +10,31 @@ exports.codeReview = async (req, res) => {
 
     
 
-    const prompt = `You are a concise and expert code reviewer.\n\nProblem Name: ${problemName}\nProblem Statement: ${problemStatement}\n\nReview the following ${language} code:\n\n${code}\n\nGive a brief, to-the-point review with:\n1. Logical or functional issues (if any)\n2. Best practices not followed\n3. Suggestions to improve performance or readability\n4. Any potential edge cases missed\n\nKeep the review clear and short (under 200 words).`;
+    const prompt = `You are a concise and expert code reviewer specializing in Data Structures and Algorithms (DSA) using ${language}.
+
+    Your task is to review the following code submission for a DSA problem.
+    
+    **Problem Name:** ${problemName}  
+    **Problem Statement:** ${problemStatement}
+    
+    **Code Submitted:**  
+    \`\`\`${language}
+    ${code}
+    \`\`\`
+    
+    Provide a brief, focused review covering:
+    1. **Correctness:** Any logical or functional errors? Are edge cases handled properly?
+    2. **Time Complexity:** Does the solution follow optimal practices (preferably O(n) or better where applicable)?
+    3. **DSA Best Practices:** Are appropriate data structures and algorithms used efficiently?
+    4. **Code Quality:** Suggestions to improve readability, maintainability, or performance.
+    5. **Edge Cases:** Any scenarios or inputs that might fail or degrade the solution?
+    
+    **Instructions:**  
+    - Be specific and constructive — avoid vague or generic feedback.  
+    - Use markdown bullet points (start each point with "- ") with no extra indentation or blank lines between them.
+    - Use bullet points for clarity.  
+    - Keep the review concise and under **200 words**.`.trim();
+    
 
     const geminiPayload = {
       contents: [
