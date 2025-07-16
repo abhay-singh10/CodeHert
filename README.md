@@ -67,6 +67,3 @@ npm install
 - [Backend README](backend/README.md)
 - [Frontend README](frontend/README.md)
 - [Compiler README](compiler/README.md)
-
-## License
-MIT
