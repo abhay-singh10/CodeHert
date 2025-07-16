@@ -20,9 +20,21 @@ connectDB();
 // Initialize Express app
 const app = express();
 
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://codehert.vercel.app' // your actual deployed frontend URL if different
+];
+
 // CORS middleware
 app.use(cors({
-  origin: 'http://localhost:5173', // Frontend URL
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps, curl, etc.)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 
