@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { fetchProblemByCode } from '../../features/problems/problemsSlice';
+import { fetchProblemByCode } from '../../slices/problems/problemsSlice';
 import ReactMarkdown from 'react-markdown';
 
 

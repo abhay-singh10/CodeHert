@@ -12,7 +12,7 @@ const AboutPage = () => (
       <div className="container">
         <div className="hero-content" style={{ display: 'block', paddingTop: '3rem' }}>
           <div className="hero-text" style={{ maxWidth: 700, margin: '0 auto' }}>
-            <h2 className="hero-title mb-4">About CodeHeart</h2>
+            <h2 className="hero-title mb-4">About CodeHert</h2>
             <p>
               This Online Judge platform was created by a single developer as a personal project. It allows users to practice coding problems, submit solutions, and receive instant feedback.
             </p>

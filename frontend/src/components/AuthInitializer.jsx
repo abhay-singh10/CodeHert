@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { fetchCurrentUser } from '../features/auth/authSlice';
+import { fetchCurrentUser } from '../slices/auth/authSlice';
 
 const AuthInitializer = () => {
   const dispatch = useDispatch();

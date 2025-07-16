@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import ProblemList from '../../components/Admin/Problem/ProblemList';
 import ProblemEditor from '../../components/Admin/Problem/ProblemEditor';
-import { fetchAllProblems, removeProblem, updateProblem, createProblem } from '../../features/admin/adminProblemsSlice';
+import { fetchAllProblems, removeProblem, updateProblem, createProblem } from '../../slices/admin/adminProblemsSlice';
 import Navbar from '../../components/Navbar/Navbar';
 
 const ProblemPage = () => {

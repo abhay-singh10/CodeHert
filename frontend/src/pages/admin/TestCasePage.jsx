@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import TestCaseList from '../../components/Admin/TestCaseList';
 import TestCaseEditor from '../../components/Admin/TestCaseEditor';
 import Navbar from '../../components/Navbar/Navbar';
-import { fetchTestCases, createTestCase, updateTestCase, deleteTestCase } from '../../features/admin/adminTestCasesSlice';
+import { fetchTestCases, createTestCase, updateTestCase, deleteTestCase } from '../../slices/admin/adminTestCasesSlice';
 
 const TestCasePage = () => {
   const navigate = useNavigate();

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { fetchSubmissionsByUser, fetchSubmissionsByProblem, fetchSubmissionsByProblemAndUser } from '../features/submissions/submissionsSlice';
+import { fetchSubmissionsByUser, fetchSubmissionsByProblem, fetchSubmissionsByProblemAndUser } from '../slices/submissions/submissionsSlice';
 import SubmissionsTable from '../components/Submission/SubmissionsTable';
 import Navbar from '../components/Navbar/Navbar';
 import MonacoEditor from '@monaco-editor/react';

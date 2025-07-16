@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { logoutUser } from '../../features/auth/authSlice';
+import { logoutUser } from '../../slices/auth/authSlice';
 
 const ProfilePersonalInfo = ({
   profile,

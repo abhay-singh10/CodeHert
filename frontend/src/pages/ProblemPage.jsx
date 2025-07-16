@@ -6,7 +6,7 @@ import ProblemDetails from '../components/Problem/ProblemDetails';
 import CodeEditor from '../components/Problem/CodeEditor';
 import IOVerdictBox from '../components/Problem/IOVerdictBox';
 import SubmissionsButton from '../components/Submission/SubmissionsButton';
-import { runCode, submitSolution } from '../features/submissions/submissionsSlice';
+import { runCode, submitSolution } from '../slices/submissions/submissionsSlice';
 import { getAICodeReview } from '../api/ai';
 
 const ProblemPage = () => {

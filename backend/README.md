@@ -35,9 +35,11 @@ NODE_ENV=development
 
 ### 3. Start the Server
 ```bash
-npm start
+npm start         # Start the server normally
+npm run dev       # Start the server with nodemon (auto-restart on changes)
 ```
 - The server will run on `http://localhost:5000` by default.
+- Nodemon is included as a dependency, so you do not need to install it globally.
 
 ## Available Scripts
 - `npm start` — Start the server

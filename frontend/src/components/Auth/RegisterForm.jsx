@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { registerUser, clearError } from '../../features/auth/authSlice';
+import { registerUser, clearError } from '../../slices/auth/authSlice';
 
 const RegisterForm = () => {
   const dispatch = useDispatch();

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProblems } from '../features/problems/problemsSlice';
+import { fetchProblems } from '../slices/problems/problemsSlice';
 import ProblemTable from '../components/Problem/ProblemTable';
 import Navbar from '../components/Navbar/Navbar';
 
