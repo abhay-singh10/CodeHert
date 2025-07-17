@@ -84,9 +84,9 @@ const ProblemDetails = () => {
           <h5 className="problem-section-title">Examples</h5>
           {currentProblem.examples.map((ex, idx) => (
             <div key={ex._id || idx} className="problem-example">
-              <div><strong>Input:</strong> <div className="problem-example-content">{ex.input}</div></div>
-              <div><strong>Output:</strong> <div className="problem-example-content">{ex.output}</div></div>
-              {ex.explanation && <div><strong>Explanation:</strong> <span className="problem-example-content">{ex.explanation}</span></div>}
+              <div><strong>Input:</strong> <div className="problem-example-content"><ReactMarkdown>{ex.input || ''}</ReactMarkdown></div></div>
+              <div><strong>Output:</strong> <div className="problem-example-content"><ReactMarkdown>{ex.output || ''}</ReactMarkdown></div></div>
+              {ex.explanation && <div><strong>Explanation:</strong> <span className="problem-example-content"><ReactMarkdown>{ex.explanation || ''}</ReactMarkdown></span></div>}
             </div>
           ))}
         </div>
