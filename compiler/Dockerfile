@@ -5,7 +5,7 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Install GCC and other necessary build tools
-RUN apk update && apk add --no-cache g++ openjdk17 python3 py3-pip 
+RUN apk update && apk add --no-cache g++ openjdk17 python3
 
 # Copy only the package.json and package-lock.json files first, then install dependencies.
 # This allows Docker to cache the npm install layer unless dependencies change, speeding up builds.
