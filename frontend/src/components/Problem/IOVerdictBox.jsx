@@ -35,6 +35,10 @@ const IOVerdictBox = ({ input, onInputChange, runResult, submissionResult, force
         output = `Compilation Error: ${errorObj.message}`;
       } else if (errorObj.type === 'runtime') {
         output = 'Runtime Error';
+      } else if (errorObj.type === 'mle') {
+        output = `Memory Limit Exceeded:${errorObj.message}`;
+      } else if (errorObj.type === 'ole') {
+        output = 'Output Limit Exceeded';
       } else {
         output = errorObj.message || 'Error';
       }
