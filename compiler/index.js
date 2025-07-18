@@ -21,15 +21,15 @@ app.post("/run", async (req, res) => {
     }
     try {
         const filePath = generateFile(language, code);
-        let output;
+        let result;
         if (language === 'java') {
-            output = await executeJava(filePath, input);
+            result = await executeJava(filePath, input);
         } else if (language === 'python') {
-            output = await executePython(filePath, input);
+            result = await executePython(filePath, input);
         } else {
-            output = await executeCpp(filePath, input);
+            result = await executeCpp(filePath, input);
         }
-        res.json({ output });
+        res.json({ output: result.stdout, errorOutput: result.stderr });
     } catch (error) {
         if (error instanceof Error) {
             res.status(500).json({

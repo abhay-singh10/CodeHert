@@ -8,6 +8,8 @@ if (!fs.existsSync(outputPath)) {
     fs.mkdirSync(outputPath, { recursive: true });
 }
 
+const MAX_OUTPUT_SIZE = 1024 * 1024; // 1MB
+
 const executeCpp = (filepath, input = '') => {
     const jobId = path.basename(filepath).split(".")[0];
     const outPath = path.join(outputPath, `${jobId}.exe`);
@@ -27,7 +29,7 @@ const executeCpp = (filepath, input = '') => {
             }
 
             // Run the executable with spawn
-            const run = spawn(outPath, [], { cwd: outputPath });
+            const run = spawn('sh', ['-c', `ulimit -v 262144; "${outPath}"`], { cwd: outputPath });
             let stdout = '';
             let stderr = '';
             // Set up a 1 second timeout for TLE
@@ -45,10 +47,20 @@ const executeCpp = (filepath, input = '') => {
 
             run.stdout.on('data', (data) => {
                 stdout += data;
+                if (stdout.length > MAX_OUTPUT_SIZE) {
+                    run.kill('SIGKILL');
+                    stdout = stdout.slice(0, MAX_OUTPUT_SIZE);
+                    stderr += '\n[Output Limit Exceeded]';
+                }
             });
-            run.stderr.on('data', (data) => { stderr += data; });
-
-            
+            run.stderr.on('data', (data) => {
+                stderr += data;
+                if (stderr.length > MAX_OUTPUT_SIZE) {
+                    run.kill('SIGKILL');
+                    stderr = stderr.slice(0, MAX_OUTPUT_SIZE);
+                    stderr += '\n[Output Limit Exceeded]';
+                }
+            });
 
             run.on('error', (err) => {
                 // Cleanup files on runtime error
@@ -66,6 +78,16 @@ const executeCpp = (filepath, input = '') => {
                 // Always cleanup after process ends
                 try { fs.unlinkSync(filepath); } catch (e) {}
                 try { fs.unlinkSync(outPath); } catch (e) {}
+
+                // OLE detection
+                if (stderr.includes('[Output Limit Exceeded]') || stdout.includes('[Output Limit Exceeded]')) {
+                    return reject({
+                        type: 'ole',
+                        message: 'Output Limit Exceeded',
+                        details: 'Your program produced too much output.'
+                    });
+                }
+
                 if (tle || signal === 'SIGKILL') {
                     return reject({
                         type: 'tle',
@@ -75,13 +97,28 @@ const executeCpp = (filepath, input = '') => {
                 }
                 if (code !== 0) {
                     const details = (stderr && stderr.trim()) ? stderr : (stdout && stdout.trim()) ? stdout : `Process exited with code ${code}`;
+                    if (
+                        details.includes('std::bad_alloc') ||
+                        details.includes('OutOfMemoryError') ||
+                        details.includes('MemoryError')
+                    ) {
+                        return reject({
+                            type: 'mle',
+                            message: 'Memory Limit Exceeded',
+                            details
+                        });
+                    }
                     return reject({
                         type: 'runtime',
                         message: 'Runtime error',
                         details
                     });
                 }
-                resolve(stdout);
+                // Always return both stdout and stderr
+                resolve({
+                    stdout,
+                    stderr
+                });
             });
         });
     });
