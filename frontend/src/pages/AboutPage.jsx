@@ -29,7 +29,7 @@ const AboutPage = () => (
             </p>
             <h4 className="mt-4"><strong>Contact</strong></h4>
             <p>
-              For feedback, suggestions, or admin requests, please reach out at <a href="mailto:abhaysingh10032004@gmail.com">abhaysingh10032004@gmail.com</a>.
+              For feedback, suggestions, or admin requests, please reach out at <a href="mailto:codehert@gmail.com">codehert@gmail.com</a>.
             </p>
           </div>
         </div>
