@@ -16,20 +16,20 @@ function normalizeOutput(str) {
 }
 
 function cleanErrorDetails(details) {
-  if (!details) return '';
-  // Replace any .cpp, .py, .java file path with a generic name (Windows or Unix)
-  return details
-    .replace(/[A-Za-z]:\\[^\r\n]+?compiler\\codes\\[^\r\n]+?\.cpp/g, 'main.cpp')
-    .replace(/[A-Za-z]:\\[^\r\n]+?compiler\\codes\\[^\r\n]+?\.py/g, 'main.py')
-    .replace(/[A-Za-z]:\\[^\r\n]+?compiler\\codes\\[^\r\n]+?\.java/g, 'Main.java')
-    // Also match Unix-style paths just in case
-    .replace(/[A-Za-z]?:?\/?[^\r\n]+?\/compiler\/codes\/[^\r\n]+?\.cpp/g, 'main.cpp')
-    .replace(/[A-Za-z]?:?\/?[^\r\n]+?\/compiler\/codes\/[^\r\n]+?\.py/g, 'main.py')
-    .replace(/[A-Za-z]?:?\/?[^\r\n]+?\/compiler\/codes\/[^\r\n]+?\.java/g, 'Main.java')
-    // Docker-specific /app/codes/uuid.cpp
-    .replace(/\/app\/codes\/[^\r\n]+?\.cpp/g, 'main.cpp')
-    .replace(/\/app\/codes\/[^\r\n]+?\.py/g, 'main.py')
-    .replace(/\/app\/codes\/[^\r\n]+?\.java/g, 'Main.java');
+    if (!details) return '';
+    // Replace any .cpp, .py, .java file path with a generic name (Windows or Unix)
+    return details
+        .replace(/[A-Za-z]:\\[^\r\n]+?compiler\\codes\\[^\r\n]+?\.cpp/g, 'main.cpp')
+        .replace(/[A-Za-z]:\\[^\r\n]+?compiler\\codes\\[^\r\n]+?\.py/g, 'main.py')
+        .replace(/[A-Za-z]:\\[^\r\n]+?compiler\\codes\\[^\r\n]+?\.java/g, 'Main.java')
+        // Also match Unix-style paths just in case
+        .replace(/[A-Za-z]?:?\/?[^\r\n]+?\/compiler\/codes\/[^\r\n]+?\.cpp/g, 'main.cpp')
+        .replace(/[A-Za-z]?:?\/?[^\r\n]+?\/compiler\/codes\/[^\r\n]+?\.py/g, 'main.py')
+        .replace(/[A-Za-z]?:?\/?[^\r\n]+?\/compiler\/codes\/[^\r\n]+?\.java/g, 'Main.java')
+        // Docker-specific /app/codes/uuid.cpp
+        .replace(/\/app\/codes\/[^\r\n]+?\.cpp/g, 'main.cpp')
+        .replace(/\/app\/codes\/[^\r\n]+?\.py/g, 'main.py')
+        .replace(/\/app\/codes\/[^\r\n]+?\.java/g, 'Main.java');
 }
 
 // @route   POST /api/compile/run
@@ -49,7 +49,9 @@ exports.run = async (req, res) => {
             if (err.details) {
                 err.details = cleanErrorDetails(err.details);
             }
-            if (err.message) {
+            if (err.type === 'mle') {
+                err.message = 'Your program tried to use more memory than allowed (256MB).';
+            } else if (err.message) {
                 err.message = cleanErrorDetails(err.message);
             }
             res.status(500).json(err);
@@ -108,13 +110,22 @@ exports.submit = async (req, res) => {
                 }
             } catch (error) {
                 let errorType = 'runtime_error';
+                const details = error.response?.data?.details || '';
                 if (error.response && error.response.data && error.response.data.type === 'compilation') {
-                  result = `Compilation Error on TC${testcase.index}`;
-                  errorType = 'compilation_error';
-                } else if(error.response && error.response.data &&  error.response.data.type === 'tle'){
+                    result = `Compilation Error on TC${testcase.index}`;
+                    errorType = 'compilation_error';
+                } else if (error.response && error.response.data && error.response.data.type === 'tle') {
                     result = `Time limit exceeded on TC${testcase.index}`;
-                } else {
-                  result = `Runtime error on TC${testcase.index}`;
+                    errorType = 'tle';
+                } else if (error.response && error.response.data && error.response.data.type === 'mle') {
+                    result = `Memory limit exceeded on TC${testcase.index}`;
+                    errorType = 'mle';
+                } else if (error.response && error.response.data && error.response.data.type === 'ole') {
+                    result = `Output limit exceeded on TC${testcase.index}`;
+                    errorType = 'ole';
+                }  else {
+                    result = `Runtime error on TC${testcase.index}`;
+                    errorType = 'runtime_error';
                 }
                 testcaseResults.push({
                     index: testcase.index,
@@ -136,22 +147,22 @@ exports.submit = async (req, res) => {
 
         // Update user's problemsAttempted and problemsSolved
         if (user && problemCode) {
-          const userDoc = await require('../models/User').findById(user);
-          if (userDoc) {
-            // Add to problemsAttempted if not already present
-            if (!userDoc.problemsAttempted.includes(problemCode)) {
-              userDoc.problemsAttempted.push(problemCode);
+            const userDoc = await require('../models/User').findById(user);
+            if (userDoc) {
+                // Add to problemsAttempted if not already present
+                if (!userDoc.problemsAttempted.includes(problemCode)) {
+                    userDoc.problemsAttempted.push(problemCode);
+                }
+                // Add to problemsSolved if accepted and not already present
+                if (result === 'Accepted' && !userDoc.problemsSolved.includes(problemCode)) {
+                    userDoc.problemsSolved.push(problemCode);
+                }
+                await userDoc.save();
             }
-            // Add to problemsSolved if accepted and not already present
-            if (result === 'Accepted' && !userDoc.problemsSolved.includes(problemCode)) {
-              userDoc.problemsSolved.push(problemCode);
-            }
-            await userDoc.save();
-          }
         }
 
         res.json({ result, testcaseResults });
     } catch (error) {
         res.status(500).json({ error: error.message });
-    } 
+    }
 };
