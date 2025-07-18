@@ -59,7 +59,9 @@ function getVerdictClass(verdict) {
     verdict.toLowerCase().includes('wrong') ||
     verdict.toLowerCase().includes('compilation') ||
     verdict.toLowerCase().includes('runtime') ||
-    verdict.toLowerCase().includes('time limit')
+    verdict.toLowerCase().includes('time limit') ||
+    verdict.toLowerCase().includes('memory limit') ||
+    verdict.toLowerCase().includes('output limit')
   ) return 'bg-danger';
   return 'bg-secondary';
 }
