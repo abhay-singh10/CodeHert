@@ -1,4 +1,5 @@
 const Problem = require('../../models/Problem');
+const TestCase = require('../../models/TestCase');
 
 // Converts a string to a URL-friendly slug
 function slugify(name) {
@@ -87,7 +88,9 @@ exports.deleteProblem = async (req, res) => {
         const { code } = req.params;
         const deletedProblem = await Problem.findOneAndDelete({ code });
         if (!deletedProblem) return res.status(404).json({ message: 'Problem not found' });
-        res.json({ message: 'Problem deleted successfully' });
+        // Delete all test cases associated with this problem
+        await TestCase.deleteMany({ problemId: deletedProblem._id });
+        res.json({ message: 'Problem and all associated test cases deleted successfully' });
     } catch (err) {
         res.status(500).json({ message: 'Server Error', error: err.message });
     }   
