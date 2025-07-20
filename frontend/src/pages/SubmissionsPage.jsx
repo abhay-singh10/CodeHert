@@ -14,16 +14,20 @@ const SubmissionsPage = () => {
   const [viewingSubmission, setViewingSubmission] = useState(null);
 
   useEffect(() => {
-    if (paramUsername && problemCode) {
-      dispatch(fetchSubmissionsByProblemAndUser({ problemCode, username: paramUsername }));
-    } else if (paramUsername) {
-      dispatch(fetchSubmissionsByUser(paramUsername));
+    // Detect if on 'my-submissions' route
+    const isMySubmissions = window.location.pathname.includes('my-submissions');
+    const username = paramUsername || (isMySubmissions && authUser?.username);
+
+    if (username && problemCode) {
+      dispatch(fetchSubmissionsByProblemAndUser({ problemCode, username }));
+    } else if (username) {
+      dispatch(fetchSubmissionsByUser(username));
     } else if (problemCode) {
       dispatch(fetchSubmissionsByProblem(problemCode));
     } else {
       dispatch(fetchSubmissionsByProblem('ALL'));
     }
-  }, [dispatch, paramUsername, problemCode]);
+  }, [dispatch, paramUsername, problemCode, authUser]);
 
   const handleVerdictClick = (submission) => {
     setViewingSubmission(submission);
