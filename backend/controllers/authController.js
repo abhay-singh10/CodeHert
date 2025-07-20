@@ -90,6 +90,7 @@ exports.login = async (req, res) => {
         res.status(200).json({
             message: 'Login successful',
             user: userObj,
+            token //add token response
         });
 
     } catch (err) {
