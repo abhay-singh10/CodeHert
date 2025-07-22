@@ -22,7 +22,7 @@ const app = express();
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://codehert.vercel.app' // your actual deployed frontend URL if different
+  'https://www.codehert.dev',
 ];
 
 // CORS middleware
