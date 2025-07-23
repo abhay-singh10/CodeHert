@@ -1,5 +1,12 @@
 # CodeHert
+
 An online judge platform for practicing Data Structures and Algorithms (DSA), featuring code submission, AI-powered code review, and user profiles.
+
+## 🎥 Video Walkthrough
+
+<video src="https://github.com/user-attachments/assets/620ec3e8-8143-4d0e-a7be-ef43d9304a1a" controls width="100%" />
+
+*Complete platform demonstration showing the full user journey from registration to code submission and AI review*
 
 ## Features
 - User registration and authentication
