@@ -53,8 +53,8 @@ jobs:
         
         ssh -i private_key.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
           # Stop existing container
-          docker stop compiler-service || true
-          docker rm compiler-service || true
+          docker stop my-compiler || true
+          docker rm my-compiler || true
           
           # Login to ECR
           aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
@@ -64,7 +64,7 @@ jobs:
           
           # Run new container
           docker run -d \
-            --name compiler-service \
+            --name my-compiler \
             -p 8000:8000 \
             -v /var/run/docker.sock:/var/run/docker.sock \
             --restart unless-stopped \
