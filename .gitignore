@@ -1,0 +1,12 @@
+# Security & Keys
+keys/
+*.pem
+*.key
+.env
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Dependencies
+node_modules/

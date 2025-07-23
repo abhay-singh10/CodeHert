@@ -14,6 +14,16 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Health check endpoint for CI/CD - Updated for pipeline test
+app.get('/health', (req, res) => {
+    res.status(200).json({ 
+        status: 'healthy', 
+        timestamp: new Date().toISOString(),
+        service: 'compiler-service',
+        version: '1.0.0'
+    });
+});
+
 app.post("/run", async (req, res) => {
     const { language = 'cpp', code , input = '' } = req.body;
     if (code === undefined) {

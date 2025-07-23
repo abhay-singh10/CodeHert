@@ -1,0 +1,83 @@
+name: Deploy Compiler Service to AWS
+
+on:
+  push:
+    branches: [ main ]
+    paths: 
+      - 'compiler/**'
+      - '.github/workflows/deploy-compiler.yml'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-north-1
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Build Docker image
+      working-directory: ./compiler
+      run: |
+        docker build -t compiler-service .
+        
+    - name: Tag and push image to ECR
+      env:
+        ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+        ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker tag compiler-service:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker tag compiler-service:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+    - name: Deploy to EC2
+      env:
+        ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+        ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+      run: |
+        echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
+        chmod 600 private_key.pem
+        
+        ssh -i private_key.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          # Stop existing container
+          docker stop compiler-service || true
+          docker rm compiler-service || true
+          
+          # Login to ECR
+          aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
+          
+          # Pull latest image
+          docker pull ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:latest
+          
+          # Run new container
+          docker run -d \
+            --name compiler-service \
+            -p 8000:8000 \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            --restart unless-stopped \
+            ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:latest
+          
+          # Health check
+          sleep 10
+          curl -f http://localhost:8000/health || echo "Health check failed"
+        EOF
+        
+        rm -f private_key.pem
+
+    - name: Verify deployment
+      run: |
+        sleep 15
+        curl -f http://${{ secrets.EC2_HOST }}:8000/health || echo "Deployment verification failed"
