@@ -2,6 +2,8 @@
 
 An online judge platform for practicing Data Structures and Algorithms (DSA), featuring code submission, AI-powered code review, and user profiles.
 
+🌐 **Live Demo:** [https://codehert.dev](https://codehert.dev)
+
 ## 🎥 Video Walkthrough
 
 [🎥 Watch the video walkthrough](https://github.com/user-attachments/assets/620ec3e8-8143-4d0e-a7be-ef43d9304a1a)
@@ -41,7 +43,7 @@ ONLINE_JUDGE_FINAL_PROJECT/
 ### 1. Clone the Repository
 ```bash
 git clone <your-repo-url>
-cd ONLINE_JUDGE_FINAL_PROJECT
+cd CodeHert
 ```
 
 ### 2. Setup Backend
