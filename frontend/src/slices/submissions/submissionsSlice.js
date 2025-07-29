@@ -12,7 +12,7 @@ export const submitSolution = createAsyncThunk(
         code,
         language,
         user,
-      });
+      }, { timeout: 20000 });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Submission failed');
@@ -25,7 +25,7 @@ export const fetchSubmissionsByProblem = createAsyncThunk(
   'submissions/fetchSubmissionsByProblem',
   async (problemCode, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/submissions/problem/${problemCode}`);
+      const response = await axios.get(`/submissions/problem/${problemCode}`, { timeout: 20000 }); //20 seconds timeout
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to fetch submissions');
@@ -38,7 +38,7 @@ export const fetchSubmissionsByUser = createAsyncThunk(
   'submissions/fetchSubmissionsByUser',
   async (username, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/user/${username}/submissions`);
+      const response = await axios.get(`/user/${username}/submissions`, { timeout: 20000 }); //20seconds timeout
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to fetch submissions');
@@ -51,7 +51,7 @@ export const fetchSubmissionsByProblemAndUser = createAsyncThunk(
   'submissions/fetchSubmissionsByProblemAndUser',
   async ({ problemCode, username }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/submissions/${problemCode}/${username}`);
+      const response = await axios.get(`/submissions/${problemCode}/${username}`, { timeout: 20000 });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Failed to fetch submissions');
@@ -68,7 +68,7 @@ export const runCode = createAsyncThunk(
         code,
         language,
         input,
-      });
+      }, { timeout: 20000 });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || 'Run failed');
