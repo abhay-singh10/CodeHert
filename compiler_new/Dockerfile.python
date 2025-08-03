@@ -1,0 +1,6 @@
+# Python Compiler Image
+FROM python:3.10-alpine
+
+WORKDIR /app
+
+# No CMD: this image is for code execution only

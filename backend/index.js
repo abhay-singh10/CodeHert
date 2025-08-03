@@ -3,6 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 const connectDB = require('./database/db');
 const cookieParser = require('cookie-parser');
+const rateLimit = require('express-rate-limit');
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -44,6 +45,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 const authMiddleware = require('./middleware/authMiddleware');
 const isAdmin = require('./middleware/isAdmin');
+const { compilerLimiter } = require('./middleware/rateLimit');
+const { aiLimiter } = require('./middleware/rateLimit');
 
 // Routes
 //authentication routes
@@ -66,10 +69,10 @@ app.use('/api/admin/testcases', authMiddleware, isAdmin, adminTestCaseRoutes);
 app.use('/api/user', userRoutes);
 
 //compiler
-app.use('/api/compile', authMiddleware, compileRoutes);
+app.use('/api/compile', authMiddleware, compilerLimiter, compileRoutes);
 
 //Hugging face Ai
-app.use('/api/ai', aiRoutes);
+app.use('/api/ai', aiLimiter, aiRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;

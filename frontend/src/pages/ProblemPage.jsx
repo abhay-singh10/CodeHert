@@ -6,7 +6,7 @@ import ProblemDetails from '../components/Problem/ProblemDetails';
 import CodeEditor from '../components/Problem/CodeEditor';
 import IOVerdictBox from '../components/Problem/IOVerdictBox';
 import SubmissionsButton from '../components/Submission/SubmissionsButton';
-import { runCode, submitSolution } from '../slices/submissions/submissionsSlice';
+import { runCode, submitSolution, clearError } from '../slices/submissions/submissionsSlice';
 import { getAICodeReview } from '../api/ai';
 
 const ProblemPage = () => {
@@ -16,6 +16,7 @@ const ProblemPage = () => {
   const currentProblem = useSelector(state => state.problems.currentProblem);
   const runResult = useSelector(state => state.submissions.runResult);
   const submissionResult = useSelector(state => state.submissions.submissionResult);
+  const error = useSelector(state => state.submissions.error);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [customInput, setCustomInput] = useState('');
@@ -24,6 +25,16 @@ const ProblemPage = () => {
   const [editorLanguage, setEditorLanguage] = useState('cpp');
   const [aiReview, setAiReview] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
+
+  useEffect(() => {
+    if (error && typeof error === 'object' && error.message) {
+      window.alert(error.message);
+      dispatch(clearError());
+    } else if (typeof error === 'string') {
+      window.alert(error);
+      dispatch(clearError());
+    }
+  }, [error, dispatch]);
 
   const handleTabChange = () => {
     setForceTab(undefined);
@@ -82,7 +93,11 @@ const ProblemPage = () => {
       setAiReview(review);
       setForceTab('review'); // Ensure tab stays on review after response
     } catch (err) {
-      setAiReview('Error getting AI review.');
+      if (err.response && err.response.status === 429 && err.response.data?.message) {
+        window.alert(err.response.data.message); // Show rate limit alert
+      } else {
+        setAiReview('Error getting AI review.');
+      }
     }
     setAiLoading(false);
   };
