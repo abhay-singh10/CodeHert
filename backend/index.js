@@ -14,6 +14,7 @@ const adminProblemRoutes = require('./routes/admin/adminProblem');
 const adminTestCaseRoutes = require('./routes/admin/adminTestCase');
 const compileRoutes = require('./routes/compile');
 const aiRoutes = require('./routes/ai');
+const corsMiddleware = require('./middleware/corsConfig');
 
 // Connect to MongoDB
 connectDB();
@@ -21,28 +22,15 @@ connectDB();
 // Initialize Express app
 const app = express();
 
-const allowedOrigins = [
-  'http://localhost:5173',
-  'https://www.codehert.dev',
-];
-
-// CORS middleware
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
-}));
+// This is required for correct client IP detection and rate limiting
+app.set('trust proxy', 1);
 
 
 // Middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(corsMiddleware);
 const authMiddleware = require('./middleware/authMiddleware');
 const isAdmin = require('./middleware/isAdmin');
 const { compilerLimiter } = require('./middleware/rateLimit');
